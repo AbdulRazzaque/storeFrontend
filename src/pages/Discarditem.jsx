@@ -301,7 +301,7 @@ const Discarditem = () => {
         theme: "light",
       });
     } else {
-      history.push("/Stockoutpdf", { data: stockOutData });
+      history.push("/Discardpdf", { data: stockOutData });
     }
   };
 
@@ -378,10 +378,13 @@ const Discarditem = () => {
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
-                  getOptionLabel={(e) => e.memberName}
+                  getOptionLabel={(e) => `${e.memberName}  ${e.department}`}
                   options={allMember}
                   onChange={(e, val) => {
                     setSelectedMember(val);
+                    setSelectedDepartment(val.department);
+                    getAllProducts(val.department);
+                    getAllStocks(val.department);
                   }}
                   sx={{ width: 250 }}
                   renderInput={(params) => (
@@ -393,12 +396,14 @@ const Discarditem = () => {
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
-                  options={department}
-                  getOptionLabel={(e) => e.name}
-                  // onChange={(e,val)=>{
-                  //   setSelectedDepartment(val.name)
-                  // }}
-                  onChange={(e, value) => handelDepatment(value.name)}
+                  options={allMember.filter(
+                    (member) => member.memberName === selectedMember?.memberName
+                  )}
+                  getOptionLabel={(e) =>
+                    e.department == undefined ? e : e.department
+                  }
+                  value={selectedDepartment}
+                  onChange={(e, value) => handelDepatment(value.department)}
                   sx={{ width: 300 }}
                   renderInput={(params) => (
                     <TextField {...params} label="Department" />

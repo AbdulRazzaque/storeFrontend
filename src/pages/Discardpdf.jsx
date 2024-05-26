@@ -16,7 +16,7 @@ const Discardpdf = (props) => {
 
   const TableData = props.location.state.data
   console.log(TableData,"print data")
-  // console.log(TableData[0].department)
+  console.log(TableData[0].comment)
   console.log(moment.parseZone(TableData[0].date).local().format("DD/MM/YYYY"))
 
 
@@ -74,12 +74,14 @@ const Discardpdf = (props) => {
                 variant='outlined'
                 fullWidth
                 multiline
-                inputProps={{
-                    readOnly: true
-                }}
-                minRows={8}
+                // inputProps={{
+                //     readOnly: true
+                // }}
+                value= {TableData[0].comment}
+                minRows={3}
                 size='small'
                 />
+            
             </div>  
                 </td>
             </tr>

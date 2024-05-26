@@ -28,6 +28,7 @@ import Login from './components/login/Login';
 import Departmetnlils from './components/Department list/Departmetnlils';
 import Orderdetailspdf from './components/Order/Orderdetailspdf';
 import ProtectedRoute from './pages/ProtectedRoute ';
+import Discardpdf from './pages/Discardpdf';
 
 
 export const ThemeContext = createContext();
@@ -76,6 +77,7 @@ function App() {
           <ProtectedRoute exact path="/Orderpdf" component={Orderpdf} />
           <ProtectedRoute exact path="/Departmetnlils" component={Departmetnlils} />
           <ProtectedRoute exact path="/Orderdetailspdf" component={Orderdetailspdf} />
+          <ProtectedRoute exact path="/Discardpdf" component={Discardpdf} />
         </Switch>
       </ThemeContext.Provider>
     </ThemeProvider>
