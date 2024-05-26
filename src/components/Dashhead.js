@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Dashhead.scss";
 import { withRouter } from "react-router";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
@@ -17,7 +17,17 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import AddIcon from '@mui/icons-material/Add';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import { Link } from "react-router-dom/cjs/react-router-dom";
+import { useHistory } from 'react-router-dom';
 const Dashhead = (props) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const history = useHistory();
+  const logout = () => {
+    sessionStorage.removeItem('accessToken');
+    setIsAuthenticated(false);
+    history.push('/');
+  };
+
+
 
   console.log(props);
   let { id, display } = props;
@@ -252,9 +262,9 @@ const Dashhead = (props) => {
           </div>
         )}
         <div className="sticky-bottom fixed-bottom ml-1 bt">
-       <Link to="/">   <Button variant="contained" color="error" style={{ width: "14%" }}>
-            Logout <LogoutIcon className="mx-3" />
-          </Button></Link>
+       <Button variant="contained" color="error" style={{ width: "14%" }} onClick={logout}>
+            Logout <LogoutIcon className="mx-3"  />
+          </Button>
         </div>
       
       </div>

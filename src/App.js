@@ -1,6 +1,6 @@
 import './App.scss';
-import {Switch,Route}  from 'react-router-dom'
-import Home from "./components/Home"
+import { Switch, Route } from 'react-router-dom';
+import Home from "./components/Home";
 import Addproduct from './pages/Addproduct';
 import { createContext, useState } from 'react';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
@@ -27,65 +27,57 @@ import Orderpdf from './components/Order/Orderpdf';
 import Login from './components/login/Login';
 import Departmetnlils from './components/Department list/Departmetnlils';
 import Orderdetailspdf from './components/Order/Orderdetailspdf';
-import Discardpdf from './pages/Discardpdf';
- export const ThemeContext = createContext();
+import ProtectedRoute from './pages/ProtectedRoute ';
+
+
+export const ThemeContext = createContext();
+
 function App() {
+  const [darkMode, setDardMode] = useState(false);
 
+  const toggleDarkMode = () => {
+    setDardMode(prevMode => !prevMode);
+  };
 
-  const [darkMode,setDardMode]= useState(false)
-
-  const toggleDarkMode =()=>{
-    setDardMode(prevMode =>!prevMode)
-  }
-   // Define Material-UI theme
-   const theme = createTheme({
+  // Define Material-UI theme
+  const theme = createTheme({
     palette: {
       mode: darkMode ? 'dark' : 'light',
     },
   });
 
   return (
-    <ThemeProvider theme={theme}> 
-    <CssBaseline />
-     <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
         <Switch>
-          <Route exact path="/Home" component={Home} />
-          <Route exact path="/Addproduct" component={Addproduct} />
-          <Route exact path="/Addmember" component={Addmember} />
-          <Route exact path="/Stockin" component={Stockin} />
-          <Route exact path="/Stockout" component={Stockout} />
-          <Route exact path="/Stockoutpdf" component={Stockoutpdf} />
-          <Route exact path="/Stock" component={Stock} />
-          <Route exact path="/StockOutSearch" component={StockOutSearch} />
-          <Route exact path="/StockInSearch" component={StockInSearch} />
-          <Route exact path="/Orderdetails" component={Orderdetails} />
-          <Route exact path="/Discarditem" component={Discarditem} />
-     {/*====================================Stock ================================================================================ */}
-          <Route exact path="/Geneticstock" component={Geneticstock} />
-          <Route exact path="/Microbiologystock" component={Microbiologystock} />
-          <Route exact path="/Parasitology" component={Parasitology} />
-          <Route exact path="/Generalstock" component={Generalstock} />
-     {/*====================================Central section ================================================================================ */}
-     <Route exact path="/Centralsection" component={Centralsection} />
-     <Route exact path="/Heamotolgy" component={Heamotolgy} />
-     <Route exact path="/Biochemistry" component={Biochemistry} />
-     <Route exact path="/HPLC" component={HPLC} />
-     <Route exact path="/AAS" component={AAS} />
-     {/*====================================Order section ================================================================================ */}
-     <Route exact path="/Order" component={Order} />
-     <Route exact path="/Orderpdf" component={Orderpdf} />
-
-     {/*====================================login section ================================================================================ */}
-     <Route exact path="/" component={Login} />
-     {/*====================================Department List section ================================================================================ */}
-     <Route exact path="/Departmetnlils" component={Departmetnlils} />
-     <Route exact path="/Orderdetailspdf" component={Orderdetailspdf} />
-    
-     {/*===================================Discard section ================================================================================ */}
-     <Route exact path="/Discardpdf" component={Discardpdf} />
-
+          <Route exact path="/" component={Login} />
+          <ProtectedRoute exact path="/Home" component={Home} />
+          <ProtectedRoute exact path="/Addproduct" component={Addproduct} />
+          <ProtectedRoute exact path="/Addmember" component={Addmember} />
+          <ProtectedRoute exact path="/Stockin" component={Stockin} />
+          <ProtectedRoute exact path="/Stockout" component={Stockout} />
+          <ProtectedRoute exact path="/Stockoutpdf" component={Stockoutpdf} />
+          <ProtectedRoute exact path="/Stock" component={Stock} />
+          <ProtectedRoute exact path="/StockOutSearch" component={StockOutSearch} />
+          <ProtectedRoute exact path="/StockInSearch" component={StockInSearch} />
+          <ProtectedRoute exact path="/Orderdetails" component={Orderdetails} />
+          <ProtectedRoute exact path="/Discarditem" component={Discarditem} />
+          <ProtectedRoute exact path="/Geneticstock" component={Geneticstock} />
+          <ProtectedRoute exact path="/Microbiologystock" component={Microbiologystock} />
+          <ProtectedRoute exact path="/Parasitology" component={Parasitology} />
+          <ProtectedRoute exact path="/Generalstock" component={Generalstock} />
+          <ProtectedRoute exact path="/Centralsection" component={Centralsection} />
+          <ProtectedRoute exact path="/Heamotolgy" component={Heamotolgy} />
+          <ProtectedRoute exact path="/Biochemistry" component={Biochemistry} />
+          <ProtectedRoute exact path="/HPLC" component={HPLC} />
+          <ProtectedRoute exact path="/AAS" component={AAS} />
+          <ProtectedRoute exact path="/Order" component={Order} />
+          <ProtectedRoute exact path="/Orderpdf" component={Orderpdf} />
+          <ProtectedRoute exact path="/Departmetnlils" component={Departmetnlils} />
+          <ProtectedRoute exact path="/Orderdetailspdf" component={Orderdetailspdf} />
         </Switch>
-    </ThemeContext.Provider>
+      </ThemeContext.Provider>
     </ThemeProvider>
   );
 }
