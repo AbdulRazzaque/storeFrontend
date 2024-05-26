@@ -597,7 +597,7 @@ const handleLogin = () => {
         </div>
         </div>
       ) : (
-        <p>Please log in to view the stockout data.</p>
+        <div className="warninig">Please log in to view the stockout data.</div>
       )}
        
        </>

@@ -127,3 +127,12 @@
         transform: translateY(0);
     }
 }
+.warninig{
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically */
+    height: 80vh; /* Full viewport height */
+    font-size: 40px;
+    color: #2E86AB;
+    font-weight: bold;
+}
