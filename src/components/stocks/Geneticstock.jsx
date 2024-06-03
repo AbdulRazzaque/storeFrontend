@@ -68,9 +68,11 @@ const Geneticstock = () => {
             ? item.expiryArray.map(e => e.expiry).join(', ')
             : 'No expiry info';
   
-          const cleanItemCode = item.product && item.product.itemCode
-            ? item.product.itemCode.replace(new RegExp(item.product.supplierName || '', 'g'), '').trim()
-            : 'ProductDeleted '; // Default or fallback code if product or itemCode is not available
+          // Replace supplierName with **** in itemCode
+          let cleanItemCode = item.product && item.product.itemCode ? item.product.itemCode : 'ProductDeleted';
+          if (item.product && item.product.supplierName) {
+            cleanItemCode = cleanItemCode.replace(item.product.supplierName, '****');
+          }
   
           return {
             ...item,
@@ -90,6 +92,8 @@ const Geneticstock = () => {
   
     fetchData();
   }, [url, accessToken]);
+  
+  
   
   useEffect(() => {
     const updatedRowSettings = data.map(item => {
@@ -126,6 +130,7 @@ const Geneticstock = () => {
   };
  
   const handleExport = () => {
+    
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
@@ -133,10 +138,19 @@ const Geneticstock = () => {
     saveAs(new Blob([excelBuffer], { type: 'application/octet-stream' }), 'Genetic stock.xlsx');
   };
 
-  // Paginated data
-  const indexOfLastRow = (currentPage + 1) * rowsPerPage;
+   // Filter data based on search query
+   const filteredData = data.filter(item =>
+    item.itemCode.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  console.log(filteredData,'filteredData')
+  // Calculate total number of pages
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
+  // Calculate the indices for the current page
+  const indexOfLastRow = currentPage * rowsPerPage + rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentData = data.slice(indexOfFirstRow, indexOfLastRow);
+  const currentData = filteredData.slice(indexOfFirstRow, indexOfLastRow);
 
 
 
@@ -264,7 +278,8 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
 
 
 
-  const filteredData = currentData.filter(item => item.itemCode.toLowerCase().includes(searchQuery.toLowerCase()));
+  // const filteredData = currentData.filter(item => item.itemCode.toLowerCase().includes(searchQuery.toLowerCase()));
+// Filter data based on search query
 
   
   return (
@@ -290,13 +305,14 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
         <div>
           <div className='text-center my-4'>
           <TextField
-        id="outlined-basic"
-        label="Search product name"
-        variant="outlined"
-        sx={{ width: 800 }}
-        required
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+             type="text"
+             placeholder="Search by item code"
+             value={searchQuery}
+             onChange={(e) => {
+               setSearchQuery(e.target.value);
+               setCurrentPage(0); // Reset to first page on search
+             }}
+     
       />
           </div>
  
@@ -311,6 +327,7 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
                 onClick={() => setSearchQuery(code)}
               >
                 {code}
+             {   console.log(code)}
               </div>
             ))}
         </div>
@@ -333,91 +350,83 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
           </thead>
           
          
-          <tbody>
-          {filteredData.map((item, index) => {
-  const codeMatch = item.itemCode.match(/\d+/);
-  const code = codeMatch ? codeMatch[0] : null;
-  const showExtraRow = index === lastIndexes[code];
-  const rowColor = getColorForIndex(index, item.totalQuantity);
+         <tbody>
+          {currentData.map((item, index) => {
+            const codeMatch = item.itemCode.match(/\d+/);
+            const code = codeMatch ? codeMatch[0] : null;
+            const showExtraRow = index === lastIndexes[code];
+            const rowColor = getColorForIndex(index, item.totalQuantity);
 
-  return (
-    <React.Fragment key={index}>
-      <tr style={{ backgroundColor: rowColor }}>
-        <th scope="row">{index + 1}</th>
-        <td>{item.itemCode.split(' ')[0]}</td>
-        <td>{new Date(item.expiryArray[0].expiry).toLocaleDateString('en-GB')}</td>
-        <td>{item.totalQuantity}</td>
-        <td>{item.product?.productName}</td>
-        <td>{item.product?.sku}</td>
-        <td>{item.product?.lotNumber}</td>
-        <td>{item.product?.manufacturer}</td>
-        <td>
-  <input
-    type="number"
-    style={{width:"100px", borderRadius:"50px"}}
-   
-    placeholder="Start Range"
-    value={rowSettings[index]?.start || ''}
-    onChange={(e) => handleSettingsChange(index, parseInt(e.target.value), rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}
-  />
-  <input
-  className='mr-3'
-    type="color"
-    value={rowSettings[index]?.startColor || ''}
-    onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, rowSettings[index]?.end, e.target.value, rowSettings[index]?.endColor)}
-  />
-  <input
- style={{width:"100px", borderRadius:"50px"}}
-    type="number"
-    placeholder="End Range"
-    value={rowSettings[index]?.end || ''}
-    onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, parseInt(e.target.value), rowSettings[index]?.startColor, rowSettings[index]?.endColor)}
-  />
-  <input
- 
-    type="color"
-    value={rowSettings[index]?.endColor || ''}
-    onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, e.target.value)}
-  />
-  <Button variant='contained'size="small" className='ml-3' onClick={() => handleUpdateSettings(item._id, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}>Update Range</Button>
-</td>
-
-      </tr>
-      {showExtraRow && (
-        <tr>
-          <td colSpan="9">Total Quantity for item code <span className="badge badge-primary tabel_itemcode">{item.itemCode.split(' ')[0]} </span>:  <span className="badge badge-success tabel_itemcode_total">{totalsByCode[code]}</span></td>
-        </tr>
-      )}
-    </React.Fragment>
-  );
-})}
-
-
-
-
-
-</tbody>
+            return (
+              <React.Fragment key={index}>
+                <tr style={{ backgroundColor: rowColor }}>
+                  <th scope="row">{index + 1 + indexOfFirstRow}</th>
+                  <td>{item.itemCode.split(' ')[0]}</td>
+                  <td>{new Date(item.expiryArray[0].expiry).toLocaleDateString('en-GB')}</td>
+                  <td>{item.totalQuantity}</td>
+                  <td>{item.product?.productName}</td>
+                  <td>{item.product?.sku}</td>
+                  <td>{item.product?.lotNumber}</td>
+                  <td>{item.product?.manufacturer}</td>
+                  <td>
+                    <input
+                      type="number"
+                      style={{ width: "100px", borderRadius: "50px" }}
+                      placeholder="Start Range"
+                      value={rowSettings[index]?.start || ''}
+                      onChange={(e) => handleSettingsChange(index, parseInt(e.target.value), rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}
+                    />
+                    <input
+                      className='mr-3'
+                      type="color"
+                      value={rowSettings[index]?.startColor || ''}
+                      onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, rowSettings[index]?.end, e.target.value, rowSettings[index]?.endColor)}
+                    />
+                    <input
+                      style={{ width: "100px", borderRadius: "50px" }}
+                      type="number"
+                      placeholder="End Range"
+                      value={rowSettings[index]?.end || ''}
+                      onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, parseInt(e.target.value), rowSettings[index]?.startColor, rowSettings[index]?.endColor)}
+                    />
+                    <input
+                      type="color"
+                      value={rowSettings[index]?.endColor || ''}
+                      onChange={(e) => handleSettingsChange(index, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, e.target.value)}
+                    />
+                    <Button variant='contained' size="small" className='ml-3' onClick={() => handleUpdateSettings(item._id, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}>Update Range</Button>
+                  </td>
+                </tr>
+                {showExtraRow && (
+                  <tr>
+                    <td colSpan="9">Total Quantity for item code <span className="badge badge-primary tabel_itemcode">{item.itemCode.split(' ')[0]}</span>: <span className="badge badge-success tabel_itemcode_total">{totalsByCode[code]}</span></td>
+                  </tr>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </tbody>
 
         </table>
         <div className="pagination justify-content-center my-5">
-      <button
-        className="btn btn-primary mr-2"
-        onClick={() => setCurrentPage(prev => prev > 0 ? prev - 1 : 0)}
-      >
-        Prev
-      </button>
-      <button
-        className="btn btn-primary"
-        onClick={() =>
-          setCurrentPage(prev =>
-            prev < Math.ceil(data.length / rowsPerPage) - 1 ? prev + 1 : prev
-          )
-        }
-      >
-        Next
-      </button>
-    </div>
-        
+        <button
+          className="btn btn-primary mr-2"
+          onClick={() => setCurrentPage(prev => (prev > 0 ? prev - 1 : 0))}
+        >
+          Prev
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={() =>
+            setCurrentPage(prev =>
+              prev < totalPages - 1 ? prev + 1 : prev
+            )
+          }
+        >
+          Next
+        </button>
+      </div>
+
       </div>
       <Darkmode />
     </div>

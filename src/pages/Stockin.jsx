@@ -128,7 +128,7 @@ try {
    })
  }
  );
- // getAlldata()
+
 } catch (error) {
    alert(error)
    
@@ -190,8 +190,7 @@ useEffect(() => {
    const  handleOpenDialog =(rowdata)=>{
     setUpdate(rowdata)
     setShowDialog(true); // Open the dialog
-    
-    
+
    }
     const updateData=(e)=>{
         setUpdate({...update,[e.target.name]:e.target.value});
@@ -304,7 +303,7 @@ const handelDeleterow = async(deleteRow)=>{
                     disablePortal
                     id="combo-box-demo"
                     // getOptionLabel={(product)=>product.itemCode}
-                    getOptionLabel={(product)=>`${product.itemCode} ${product.productName} ${product.lotNumber}`}
+                    getOptionLabel={(product)=>`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber}`}
                     // options={allProducts.filter(product => product.department === selectedDepartment)}
                     options={allProducts}
                     sx={{ width: 400 }}
@@ -367,7 +366,7 @@ const handelDeleterow = async(deleteRow)=>{
                     <TableRow key={row.id}>
                     <TableCell >{row.docNo}</TableCell>
                     <TableCell >{row.department}</TableCell>
-                    <TableCell >{row.itemCode}</TableCell>
+                    <TableCell>{row.product.itemCode.split(" ")[0]}</TableCell>
                     <TableCell >{row.productName}</TableCell>
                     <TableCell >{row.quantity}</TableCell>
                     <TableCell >{moment.parseZone(row.expiry).local().format("DD/MM/YY")}</TableCell>

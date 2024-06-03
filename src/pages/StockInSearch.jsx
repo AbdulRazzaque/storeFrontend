@@ -52,7 +52,6 @@ const department =[
       { field: 'quantity', headerName: 'Quantity' ,width: 150 },
       {field: "createdAt",headerName: "Date", type:'date',width: 150, valueGetter:(rowData)=>moment(rowData.row.createdAt).format("DD/MM/YYYY") },
       {field: "expiry",headerName: "Expiry Date", type:'date',width: 150,valueGetter:(rowData)=>moment(rowData.row.expiry).format("DD/MM/YYYY")},
-        
     ]; 
 
 

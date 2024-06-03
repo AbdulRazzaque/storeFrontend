@@ -23,10 +23,10 @@ import {
 } from "@mui/material";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+
 
 import PrintIcon from "@mui/icons-material/Print";
-import { Link, useHistory } from "react-router-dom/cjs/react-router-dom";
+import {  useHistory } from "react-router-dom/cjs/react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import moment from "moment";
@@ -37,7 +37,7 @@ import LoginModal from '../components/model/LoginModal';
 
 const Stockout = () => {
   const [display, setDisplay] = React.useState(false);
-  // const [selectedDate,setSelectedDate]= useState()
+
   const [selectedDate, setSelectedDate] = React.useState(new Date());
   const [showDialog, setShowDialog] = useState(false);
   const [allMember, setAllMember] = React.useState([]);
@@ -252,6 +252,7 @@ const handleLogin = () => {
               item.itemCode = item.itemCode.replace(item[field], "");
             }
           });
+
           return { ...item, id: index + 1 };
         });
         setAllProducts(arr);
@@ -463,7 +464,7 @@ const handleLogin = () => {
                   disablePortal
                   id="combo-box-demo"
                   options={allProducts}
-                  getOptionLabel={(e) => `${e.itemCode} ${e.productName}`}
+                  getOptionLabel={(e) => `${e.itemCode.split(" ")[0]} ${e.productName} ${e.lotNumber}`}
                   isSearchable
                   value={selectedProduct}
                   onChange={(e, val) => handleProducts(val)}
@@ -551,12 +552,13 @@ const handleLogin = () => {
               {
                 // rows.map((row)=>(
                 stockOutData.map((item, index) => (
+
                   <TableRow key={item.index}>
                     <TableCell>{item.docNo}</TableCell>
                     {/* <TableCell >{item._id}</TableCell> */}
                     <TableCell>{item.department}</TableCell>
                     <TableCell>{item.memberName}</TableCell>
-                    <TableCell>{item.itemCode}</TableCell>
+                    <TableCell>{item.product.itemCode.split(" ")[0]}</TableCell>
                     <TableCell>{item.productName}</TableCell>
                     <TableCell>{item.quantity}</TableCell>
                     <TableCell>
