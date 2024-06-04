@@ -83,7 +83,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
     e.preventDefault();
     // Replace with your authentication logic
     // if (username === 'tharb' && password === 'tharb@123') {
-    if (username === 'admin' && password === 'admin') {
+    if (username === 'tharb' && password === 'tharb@123') {
       onLogin();
     } else {
       alert('Invalid credentials');
