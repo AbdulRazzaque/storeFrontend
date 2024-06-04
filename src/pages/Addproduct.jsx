@@ -83,6 +83,7 @@ const departments = [
   { id: 5, name: 'AAS',  },
   { id: 6, name: 'PARASITOLOGY', },
   { id: 7, name: 'GENERAL', },
+  { id: 8, name: 'HEAMOTOLGY', },
   // Add more departments as needed
 ];
     // Callback function to handle department selection

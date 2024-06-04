@@ -366,7 +366,7 @@ const handelDeleterow = async(deleteRow)=>{
                     <TableRow key={row.id}>
                     <TableCell >{row.docNo}</TableCell>
                     <TableCell >{row.department}</TableCell>
-                    <TableCell>{row.product.itemCode.split(" ")[0]}</TableCell>
+                    <TableCell>{row.itemCode}</TableCell>
                     <TableCell >{row.productName}</TableCell>
                     <TableCell >{row.quantity}</TableCell>
                     <TableCell >{moment.parseZone(row.expiry).local().format("DD/MM/YY")}</TableCell>

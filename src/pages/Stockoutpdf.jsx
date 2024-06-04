@@ -55,7 +55,7 @@ const Stockoutpdf = (props) => {
             {TableData.map((row, index) => (
               <tr key={index + 1} className='table-bordered'>
                 <td className='text-center table-bordered'>{index + 1}</td>
-                <td className='text-center table-bordered'>{row.product.itemCode}</td>
+                <td className='text-center table-bordered'>{row.product.itemCode.split(" ")[0]}</td>
                 <td className='text-center table-bordered'>{row.productName}</td>
                 <td className='text-center table-bordered'>{row.product.unit}</td>
                 <td className='text-center table-bordered'>{row.quantity}</td>

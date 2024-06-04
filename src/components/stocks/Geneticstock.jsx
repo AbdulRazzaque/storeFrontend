@@ -24,8 +24,32 @@ const Geneticstock = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [rowSettings, setRowSettings] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [clickedSuggestion, setClickedSuggestion] = useState(false);
 
-  const uniqueItemCodes = [...new Set(data.map(item => item.itemCode))];
+  const filteredData = data.filter(item =>
+    item.product && item.product.productName && (
+      `${item.itemCode.split(" ")[0]} ${item.name} ${item.product.lotNumber}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.product.productName.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+  
+  console.log(filteredData, 'filteredData');
+  
+  // Adjust the unique item codes to include necessary details
+  const uniqueItemCodes = [...new Set(filteredData.map(item => `${item.itemCode.split(" ")[0]} ${item.name} ${item.product.lotNumber}`))];
+  
+
+  const handleSuggestionClick = (code) => {
+    // Extract the productName from the code by finding the item in filteredData
+    const selectedItem = filteredData.find(item =>
+      `${item.itemCode.split(" ")[0]} ${item.name} ${item.product.lotNumber}` === code
+    );
+  
+    if (selectedItem) {
+      setSearchQuery(selectedItem.product.productName);
+      setClickedSuggestion(true); // Set the flag to indicate a suggestion has been clicked
+    }
+  };
   const url = process.env.REACT_APP_DEVELOPMENT
 
 
@@ -138,12 +162,7 @@ const Geneticstock = () => {
     saveAs(new Blob([excelBuffer], { type: 'application/octet-stream' }), 'Genetic stock.xlsx');
   };
 
-   // Filter data based on search query
-   const filteredData = data.filter(item =>
-    item.itemCode.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  console.log(filteredData,'filteredData')
+  
   // Calculate total number of pages
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
@@ -307,6 +326,7 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
           <TextField
              type="text"
              placeholder="Search by item code"
+             sx={{width:800}}
              value={searchQuery}
              onChange={(e) => {
                setSearchQuery(e.target.value);
@@ -316,22 +336,29 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
       />
           </div>
  
-      {searchQuery.length > 0 && (
-        <div className="suggestions">
-          {uniqueItemCodes
-            .filter(code => code.toLowerCase().includes(searchQuery.toLowerCase()))
-            .map(code => (
-              <div
-                key={code}
-                className="suggestion"
-                onClick={() => setSearchQuery(code)}
-              >
-                {code}
-             {   console.log(code)}
-              </div>
-            ))}
-        </div>
-      )}
+          <div>
+    {searchQuery.length > 0 && !clickedSuggestion && (
+      <div className="suggestions">
+        {uniqueItemCodes
+          .filter(code => code.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map(code => (
+            <div
+              key={code}
+              className="suggestion"
+              onClick={() => handleSuggestionClick(code)}
+            >
+              {code}
+            </div>
+          ))}
+      </div>
+    )}
+    {clickedSuggestion && filteredData.length > 0 && (
+      <div className="filtered-results">
+        {/* Display filtered data here */}
+      </div>
+    )}
+  </div>
+
     </div>
 <div className='text-right my-3'>
 <b>Note: After adding the range, don't forget to update the Range button</b>
