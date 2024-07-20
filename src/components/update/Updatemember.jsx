@@ -38,9 +38,9 @@ const Updatemember = ({update,showDialog,setShowDialog,changeRoweData,updateRow,
           label="department"
           name='department'
           onChange={changeRoweData}
-        >
+        > 
         <MenuItem value="TCGC">TCGC</MenuItem>
-          <MenuItem value="Microbiology">MICROBIOLOGY</MenuItem>
+          <MenuItem value="MICROBIOLOGY">MICROBIOLOGY</MenuItem>
           <MenuItem value="HEAMOTOLGY">HEAMOTOLGY</MenuItem>
           <MenuItem value="BIOCHEMISTRY">BIOCHEMISTRY</MenuItem>
           <MenuItem value="HPLC">HPLC</MenuItem>
