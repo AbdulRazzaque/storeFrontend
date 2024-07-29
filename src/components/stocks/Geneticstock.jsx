@@ -79,7 +79,7 @@ const Geneticstock = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/stock/getAllStocks/TCGC`, {
+        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/TCGC`, {
           headers: { token: accessToken }
         });
   

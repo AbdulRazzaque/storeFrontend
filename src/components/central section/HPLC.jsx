@@ -80,7 +80,7 @@ const HPLC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/stock/getAllStocks/HPLC`, {
+        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/HPLC`, {
           headers: { token: accessToken }
         });
   

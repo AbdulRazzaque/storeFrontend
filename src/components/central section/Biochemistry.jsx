@@ -81,7 +81,7 @@ const Biochemistry = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/stock/getAllStocks/BIOCHEMISTRY`, {
+        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/BIOCHEMISTRY`, {
           headers: { token: accessToken }
         });
   

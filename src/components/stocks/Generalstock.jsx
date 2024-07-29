@@ -510,7 +510,7 @@ const Generalstock = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/stock/getAllStocks/GENERAL`, {
+        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/GENERAL`, {
           headers: { token: accessToken }
         });
   

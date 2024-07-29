@@ -81,7 +81,7 @@ const AAS = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/stock/getAllStocks/AAS`, {
+        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/AAS`, {
           headers: { token: accessToken }
         });
   

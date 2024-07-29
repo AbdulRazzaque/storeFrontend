@@ -81,7 +81,7 @@ const Parasitology = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/stock/getAllStocks/PARASITOLOGY`, {
+        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/PARASITOLOGY`, {
           headers: { token: accessToken }
         });
   

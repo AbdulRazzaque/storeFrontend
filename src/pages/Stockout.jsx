@@ -260,10 +260,10 @@ const handleLogin = () => {
       });
   };
 
-  const getAllStocks = (value) => {
+  const getAllStocks = () => {
     axios
       .get(
-        `${process.env.REACT_APP_DEVELOPMENT}/api/stock/getAllStocks/${value}`,
+        `${process.env.REACT_APP_DEVELOPMENT}/api/stock/getAllStocks`,
         {
           headers: { token: accessToken },
         }
@@ -297,13 +297,13 @@ const handleLogin = () => {
     console.log(value, "Here i am cheack");
 
     // getAllProducts(value)
-    getAllStocks(value);
+    getAllStocks();
     console.log(value, "Here i am cheack");
 
-    getAllProducts(value);
+    getAllProducts();
   };
 
-  // ==========================================================send print button data ==========================================================================================
+  // ==========================================================send print button data==========================================================================================
 
   const handelPrintData = () => {
     if (stockOutData.length === 0) {
@@ -413,9 +413,9 @@ const handleLogin = () => {
                   options={allMember}
                   onChange={(e, val) => {
                     setSelectedMember(val);
-                    setSelectedDepartment(val.department);
-                    getAllProducts(val.department);
-                    getAllStocks(val.department);
+                    setSelectedDepartment(val?.department);
+                    getAllProducts();
+                    getAllStocks();
                   }}
                   sx={{ width: 250 }}
                   renderInput={(params) => (

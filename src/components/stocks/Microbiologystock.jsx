@@ -81,7 +81,7 @@ const Microbiologystock = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/stock/getAllStocks/MICROBIOLOGY`, {
+        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/MICROBIOLOGY`, {
           headers: { token: accessToken }
         });
   

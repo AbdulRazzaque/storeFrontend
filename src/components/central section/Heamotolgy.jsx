@@ -81,7 +81,7 @@ const Heamotolgy = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/stock/getAllStocks/HEAMOTOLGY`, {
+        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/HEAMOTOLGY`, {
           headers: { token: accessToken }
         });
   
