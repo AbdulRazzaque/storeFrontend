@@ -59,6 +59,7 @@ const Orderdetails = () => {
     { field: "id", headerName: "S.N", width: 70 },
     { field: "itemnumber", headerName: "Ref no", width: 150 },
     { field: "department", headerName: "Department",valueGetter:(params)=>params.row.memberId?.department ,width: 150 },
+    { field: "orderType", headerName: "order type", width: 150  },
     { field: "createdAt", headerName: "Order issue date", width: 150 ,valueGetter:(rowData)=> moment(rowData.createdAt).format('DD/MM/YYYY') },
     
     {

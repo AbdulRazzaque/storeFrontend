@@ -81,9 +81,10 @@ const Orderpdf = () => {
       <div className="row my-5  ml-5 sideTitle">
         <div className="col text-left">
           <p>
-            Kindly apporve and proceed for this purchase request from{" "}
+            {/* Kindly apporve and proceed for this purchase request from{" "}
             <b>{department}.</b> The list of request items is
-            listed below:
+            listed below: */}
+            Kindly approve and proceed this <b>{orderDetailsData[0].objArray.orderType}</b> purchase request from <b>{department}</b>. The requested items are listed below:
           </p>
         </div>
       </div>

@@ -24,6 +24,7 @@ const Order = () => {
     const [refNo,setRefNo]= useState(2)
     const [member,setMember]=useState([])
     const [itemArray,seItemArray]=useState([])
+    const [orderType,setOrderType]=useState([])
     //======================================================= ========================================================================
     const dispatch = useDispatch()
     
@@ -63,7 +64,9 @@ console.log(array);
     productId: productIds,  // Now dynamically set from the `data`
     requiredQuantity: array,
     productName: productNames,
-    itemnumber: itemcode+itemnumber
+    itemnumber: itemcode+itemnumber,
+    orderType:orderType
+
   };
 
   try {
@@ -159,6 +162,16 @@ useEffect(() => {
     }
   }
 }, [member?.department]);
+
+const orderCategory =[
+  {type:'Regular'},
+  {type:"Urgent"},
+  {type:"New"},
+ 
+]
+
+console.log(orderType,'orderType')
+
   return (
     <div className="row">
     <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
@@ -195,12 +208,12 @@ useEffect(() => {
     
         <div>
 <form onSubmit={handleSubmit(onSubmit)}>
-<div className="d-flex justify-content-center my-5">
+<div className="d-flex justify-content-center my-5 ">
 <Autocomplete
                     disablePortal
                     id="combo-box-demo"
                      options={allMember}
-                    sx={{width:550}}
+                    sx={{width:350, mx:5}}
                     getOptionLabel={(memberName)=>`${memberName.memberName} ${memberName.department}`}
                    onChange={(ev,val)=>{
                     setMember(val)
@@ -210,7 +223,24 @@ useEffect(() => {
 
                     
                     />
+
+
+<Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                     options={orderCategory}
+                    sx={{width:300}}
+                    getOptionLabel={(orderType)=>orderType.type}
+                   onChange={(ev,val)=>{
+                    setOrderType(val.type)
+                    // setItemcode(member?.department)
+                   }}
+                    renderInput={(params) => <TextField {...params} label="Select order type" required/>}
+
+                    
+                    />
 </div>
+
 
 <table className="table table-bordered">
   <thead>
