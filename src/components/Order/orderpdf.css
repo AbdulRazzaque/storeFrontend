@@ -1,11 +1,11 @@
-/* Default to hide the footer */
-.orderfooter {
-    display: none;
-}
-
-/* Show the footer when printing */
-@media print {
-    .orderfooter {
-        display: block;
+@media print{
+    @page {
+        size: a4
     }
+    .table-bordered{
+        border: 2px solid black !important;
+        font-size: larger;
+    }
+
+    
 }

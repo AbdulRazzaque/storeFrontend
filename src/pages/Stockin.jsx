@@ -303,9 +303,9 @@ const handelDeleterow = async(deleteRow)=>{
                     disablePortal
                     id="combo-box-demo"
                     // getOptionLabel={(product)=>product.itemCode}
-                    getOptionLabel={(product)=>`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber}`}
-                    // options={allProducts.filter(product => product.department === selectedDepartment)}
-                    options={allProducts}
+                    getOptionLabel={(product)=>`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`}
+                    options={allProducts.filter(product => product.department === selectedDepartment)}
+                    // options={allProducts}
                     sx={{ width: 400 }}
                     renderInput={(params) => <TextField {...params} label="Select item code,Product name" required/>}
                     onChange={(event, newValue) => {

@@ -57,6 +57,7 @@ const Stockout = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // ========================================================================================================================================================
+  console.log(allProducts,"allProducts")
   const history = useHistory();
   const {
     register,
@@ -277,10 +278,11 @@ const handleLogin = () => {
       });
   };
   // ===========================================Auto complete handel product==========================================================================================
+
   const handleProducts = (val) => {
     setSelectedProduct(val);
     const selectedStock = allStocks.find(
-      (stock) => stock?.name === val?.productName
+      (stock) => stock.name === val.productName
     );
     setSelectedExpiry(null); // Reset selected expiry when changing product
     setSelectedStock(selectedStock);
@@ -317,7 +319,8 @@ const handleLogin = () => {
         progress: undefined,
         theme: "light",
       });
-    } else {
+    } 
+    else {
       history.push("/Stockoutpdf", { data: stockOutData });
     }
   };
@@ -434,7 +437,7 @@ const handleLogin = () => {
                     e.department == undefined ? e : e.department
                   }
                   value={selectedDepartment}
-                  onChange={(e, value) => handelDepatment(value.department)}
+                  onChange={(e, value) => handelDepatment(value?.department)}
                   sx={{ width: 300 }}
                   renderInput={(params) => (
                     <TextField {...params} label="Department" />
@@ -464,7 +467,7 @@ const handleLogin = () => {
                   disablePortal
                   id="combo-box-demo"
                   options={allProducts}
-                  getOptionLabel={(e) => `${e.itemCode.split(" ")[0]} ${e.productName} ${e.lotNumber}`}
+                  getOptionLabel={(e) => `${e.itemCode.split(" ")[0]} ${e.productName} ${e.lotNumber} ${e.physicalLocation}`}
                   isSearchable
                   value={selectedProduct}
                   onChange={(e, val) => handleProducts(val)}
@@ -535,6 +538,7 @@ const handleLogin = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
+                <TableCell>SNO</TableCell>
                 <TableCell>Doc</TableCell>
                 {/* <TableCell>_id</TableCell> */}
                 <TableCell>Department</TableCell>
@@ -554,6 +558,7 @@ const handleLogin = () => {
                 stockOutData.map((item, index) => (
 
                   <TableRow key={item.index}>
+                    <TableCell>{index+1}</TableCell>
                     <TableCell>{item.docNo}</TableCell>
                     {/* <TableCell >{item._id}</TableCell> */}
                     <TableCell>{item.department}</TableCell>

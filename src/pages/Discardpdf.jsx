@@ -1,12 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './pdf.scss';
 
 import header from '../image/Discardlogo.png';
 import foot from '../image/foot.png';
 import moment from 'moment';
+import logo from '../image/logo.png'
 import { InputLabel, TextField } from '@mui/material';
 
 const Discardpdf = (props) => {
+
+  const [currentDateTime,setCurrentDateTime]=useState(moment())
+
   useEffect(()=>{
     setTimeout(()=>{
       
@@ -16,8 +20,8 @@ const Discardpdf = (props) => {
 
   const TableData = props.location.state.data
   console.log(TableData,"print data")
-  console.log(TableData[0].comment)
-  console.log(moment.parseZone(TableData[0].date).local().format("DD/MM/YYYY"))
+  console.log(TableData[0]?.comment)
+  // console.log(moment.parseZone(TableData[0]?.date).local().format("DD/MM/YYYY"))
 
 
   return (
@@ -28,19 +32,31 @@ const Discardpdf = (props) => {
             <tr>
               <th colSpan="10">
                 <div className="">
-                  <div className="row">
-                    <div className="col-12">
-                    <div className=" image-container">
-                      <img src={header} alt="Thabr" className='full-width-image' />
-                    </div>
-                    </div>
-                 
+                <div className="row">
+                  <div className="col-4 text-left">
+                    <div className="">
+                     <h2>Tharb Camel Hospital Laboratory Division Laboratory Store</h2>
                     
+                    </div>
+                    
+                    </div>
+                  <div className="col-6">
+                    <div className=" image-container text-right">
+                      <img src={logo} alt="Thabr"  />
+                    </div>
+                    
+                    </div>
+                    <div className="col-12 empty_border mt-5"></div>
+                    <div className='col-12'>
+                      <h1 className='text-center'>Tharb Lab Store Discard Record</h1>
+                    </div>
+                    <div className="col-12 empty_border"></div>
+                    {/* <div className="col-12 empty_border"></div> */}
                   </div>
                 </div>
                 <div className="row my-5 sideTitle">
-                  <div className="col text-left"><p><b>Date:</b> <span>{moment.parseZone(TableData[0].date).local().format("DD/MM/YYYY")}</span></p></div>
-                  <div className="col text-right mr-5"><p><b>Department:</b> <span>{TableData[0].department}</span></p></div>
+                  <div className="col text-left"><p><b>Date:</b> <span>{moment.parseZone(TableData[0]?.date).local().format("DD/MM/YYYY")}</span></p></div>
+                  <div className="col text-right mr-5"><p><b>Department:</b> <span>{TableData[0]?.department}</span></p></div>
                 </div>
               </th>
             </tr>
@@ -77,7 +93,7 @@ const Discardpdf = (props) => {
                 // inputProps={{
                 //     readOnly: true
                 // }}
-                value= {TableData[0].comment}
+                value= {TableData[0]?.comment}
                 minRows={3}
                 size='small'
                 />
@@ -89,14 +105,27 @@ const Discardpdf = (props) => {
     <tr >
       <td colSpan="10">
         <div className="row sideTitle">
-          <div className="col text-left"><p><b>Requested by  <span>: {TableData[0].memberName}</span></b></p></div>
+          <div className="col text-left"><p><b>Requested by  <span>: {TableData[0]?.memberName}</span></b></p></div>
           <div className="col text-right mr-5"><p><b>Approved by :</b></p></div>
         </div>
         <div className="row sideTitle my-5">
           <div className="col text-left"><p><b>Discarded by :</b></p></div>
           {/* <div className="col text-right mr-5"><p><b>Store keeper</b></p></div> */}
         </div>
-    <img src={foot} alt="Thabr" className='full-width-image' />
+        <div className="row">
+            <div className="col-12 empty_border"></div>
+            <div className="col-6 text-left mt-5">
+              <h3>Dokhan St, Exit 66-Tharb Area-Doha,Qatar</h3>
+              <h3>TQ.S-DR-05 Version:01</h3>
+            </div>
+            <div className="col-6 text-right mt-5">
+            <h3>e-mail: marwa@tharb.net</h3>
+            <h3>Telephone No. 33528649</h3>
+            </div>
+            <div className="col-12 text-center mt-5">
+              <h3>Print Date and time:{currentDateTime.format("DD/MM/YYYY h:mm A")} </h3>
+            </div>
+            </div>
       </td>
     </tr>
   </tfoot>

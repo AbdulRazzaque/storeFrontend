@@ -278,31 +278,39 @@ const Discarditem = () => {
 
   // ===========================================Auto complete handel Deparment==========================================================================================
 
+
   const handelDepatment = (value) => {
-    getAllProducts();
-    getAllStocks(value);
     setSelectedDepartment(value);
+
     setSelectedProduct(null);
     setSelectedExpiry(null);
     console.log(value, "Here i am cheack");
+
+    // getAllProducts(value)
+    getAllStocks();
+    console.log(value, "Here i am cheack");
+
+    getAllProducts();
   };
+
   // ==========================================================send print button data ==========================================================================================
 
   const handelPrintData = () => {
-    if (stockOutData.length === 0) {
-      toast("Discard items first", {
-        position: "top-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-    } else {
+    // if (stockOutData.length === 0) {
+    //   toast("Discard items first", {
+    //     position: "top-center",
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //     theme: "light",
+    //   });
+    // } 
+    // else {
       history.push("/Discardpdf", { data: stockOutData });
-    }
+    // }
   };
 
   return (
@@ -450,7 +458,7 @@ const Discarditem = () => {
                   disablePortal
                   id="combo-box-demo"
                   options={[...allProducts]}
-                  getOptionLabel={(e) => `${e.itemCode} ${e.productName}`}
+                  getOptionLabel={(e) => `${e.itemCode.split(" ")[0]} ${e.productName} ${e.lotNumber} ${e.physicalLocation}`}
                   isSearchable
                   value={selectedProduct}
                   // onChange={(e,val)=>handelproducts(val)}

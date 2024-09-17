@@ -10,9 +10,9 @@ body {
     }
     .table-bordered{
         border: 2px solid black !important;
-        font-size: larger;
+        font-size: 20px !important;
     }
-
+    
     
 }
 .Pdflogo{
@@ -27,7 +27,7 @@ body {
 
 .table-bordered{
     border: 2px solid black !important;
-    font-size: medium;
+    font-size: 16px;
 }
 .sign{
    
@@ -36,9 +36,25 @@ body {
 .sideTitle{
     font-size: large;
 }
-.image-container {
+.image-container2 {
     max-width: 100%;
     overflow: hidden;
+
+}
+.image-container {
+    // max-width: 100%;
+    // overflow: hidden;
+    // height: 120px;
+    position: relative;
+    left: 200px;
+    img{
+        height: 120px;
+    }
+}
+.empty_border{
+    border: solid 1px black;
+    // margin-top: 33px;
+    margin-left: 16px;
 }
 
 .full-width-image {
@@ -48,3 +64,59 @@ body {
     height: auto;
     image-rendering: auto;
 }
+
+// @media print {
+//     .print-footer {
+//         // page-break-before: always; /* Ensure the footer starts on a new page if table content overflows */
+//         position: fixed;
+//         bottom: 0;
+//         // left: 0;
+//         // width: 100%;
+//       }
+    
+//   }
+@media print {
+    .print-content {
+      margin-bottom: 100px; /* Space for footer */
+    }
+  
+    table {
+      width: 100%;
+      page-break-inside: auto;
+      margin-bottom: 0;
+    }
+  
+    thead {
+      display: table-header-group;
+    }
+  
+    tbody {
+      display: table-row-group;
+    }
+  
+    tfoot {
+      display: table-footer-group;
+      position: relative; /* Relative positioning ensures footer stays with the table */
+      bottom: 0;
+      width: 100%;
+    }
+  
+    tr {
+      page-break-inside: avoid; /* Avoid breaking rows across pages */
+    }
+  
+    .print-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      background: white; /* Background to prevent overlap issues */
+      text-align: center;
+      font-size: 12px; /* Adjust size if needed */
+      border-top: 1px solid #ddd; /* Optional border for clarity */
+    }
+
+  }
+  
+  
