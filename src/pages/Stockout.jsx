@@ -278,11 +278,10 @@ const handleLogin = () => {
       });
   };
   // ===========================================Auto complete handel product==========================================================================================
-
   const handleProducts = (val) => {
     setSelectedProduct(val);
     const selectedStock = allStocks.find(
-      (stock) => stock.name === val?.productName
+      (stock) => stock?.name === val?.productName
     );
     setSelectedExpiry(null); // Reset selected expiry when changing product
     setSelectedStock(selectedStock);
@@ -319,8 +318,7 @@ const handleLogin = () => {
         progress: undefined,
         theme: "light",
       });
-    } 
-    else {
+    } else {
       history.push("/Stockoutpdf", { data: stockOutData });
     }
   };

@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 // import Warning from './Warning';
 // import Terminations from './Terminations';
 const Departmetnlils = ({ departments ,onDepartmentSelect  }) => {
-  console.log(departments,'depamrtnt')
+  // console.log(departments,'depamrtnt')
     //  =====================================logic==========================================================================
     const [display,setDisplay]=React.useState(false)
     const [value, setValue] = React.useState();
