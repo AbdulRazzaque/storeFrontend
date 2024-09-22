@@ -24,6 +24,7 @@ const Stockin = () => {
     const [showDialog,setShowDialog]= useState(false)
     const [update,setUpdate]=useState([])
     const [allMember,setAllMember] = React.useState([])
+    const [allLocation,setAllLocation] = React.useState([])
     const [alert,setAlert]= useState(false)
     const [docNo, setDocNo] = React.useState(1);
     const [selectedProduct,setSelectedProduct]=React.useState(null)
@@ -37,7 +38,7 @@ const { register, handleSubmit, formState: { errors } } = useForm();
 const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo"
 
 // ========================================================================================================================================================
-
+console.log(allLocation,"allLocation")
 
     const department =[
       {name:'TCGC'},
@@ -50,40 +51,86 @@ const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbW
       {name:"GENERAL"},
     ]
 
-
-    const handelDepatment =(value)=>{
-      setSelectedDepartment(value)
-      
-      console.log(value,"Here i am cheack")
-      const getAllProducts =(value)=>{
+    const handelDepatment = (value) => {
+      setSelectedDepartment(value);
+      setSelectedProduct(null);  // Clear the selected product when department changes
     
+      console.log(value, "Here I am check");
+    
+      const getAllProducts = () => {
         axios
           .get(`${process.env.REACT_APP_DEVELOPMENT}/api/product/getAllProducts`, {
             headers: { token: accessToken },
           })
-          .then(res=>{
-            let arr = res.data.result.map((item,index)=>{
-              const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
-              fieldsToCheck.forEach(field=>{
-                if(item.itemCode.includes(item[field])){
-                  item.itemCode = item.itemCode.replace(item[field],'')
+          .then((res) => {
+            let arr = res.data.result.map((item, index) => {
+              const fieldsToCheck = [
+                'productName',
+                'lotNumber',
+                'manufacturer',
+                'physicalLocation',
+                'sku',
+                'supplierName',
+                'unit',
+                'addModel',
+              ];
+              fieldsToCheck.forEach((field) => {
+                if (item.itemCode.includes(item[field])) {
+                  item.itemCode = item.itemCode.replace(item[field], '');
                 }
-              })
-              return {...item, id:index +1}
-            })
-      
+              });
+              return { ...item, id: index + 1 };
+            });
+    
             let filteredProducts = arr;
             if (value) {
-              console.log(value,'selectedDepartment')
-              filteredProducts = arr.filter(product => product.department === value);
+              console.log(value, 'selectedDepartment');
+              filteredProducts = arr.filter((product) => product.department === value);
             }
+    
+            setAllProducts(filteredProducts);
+            console.log(filteredProducts, 'filteredProducts');
+          });
+      };
+    
+      getAllProducts();
+      getAllLocations();
+    };
+    
+    // const handelDepatment =(value)=>{
+    //   setSelectedDepartment(value)
+
+    //   console.log(value,"Here i am cheack")
+    //   const getAllProducts =(value)=>{
+    
+    //     axios
+    //       .get(`${process.env.REACT_APP_DEVELOPMENT}/api/product/getAllProducts`, {
+    //         headers: { token: accessToken },
+    //       })
+    //       .then(res=>{
+    //         let arr = res.data.result.map((item,index)=>{
+    //           const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
+    //           fieldsToCheck.forEach(field=>{
+    //             if(item.itemCode.includes(item[field])){
+    //               item.itemCode = item.itemCode.replace(item[field],'')
+    //             }
+    //           })
+    //           return {...item, id:index +1}
+    //         })
       
-            setAllProducts(filteredProducts)
-            console.log(filteredProducts,'filteredProducts')
-          })
-      }
-      getAllProducts()
-    }
+    //         let filteredProducts = arr;
+    //         if (value) {
+    //           console.log(value,'selectedDepartment')
+    //           filteredProducts = arr.filter(product => product.department === value);
+    //         }
+      
+    //         setAllProducts(filteredProducts)
+    //         console.log(filteredProducts,'filteredProducts')
+    //       })
+    //   }
+    //   getAllProducts()
+    //   getAllLocations()
+    // }
 
     // ================================================================post api code========================================================================================
 
@@ -141,6 +188,13 @@ const getAllMember = ()=>{
   axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/member/getAllMember/`,{headers:{token:`${accessToken}`}})
   .then(res=>{
     setAllMember(res.data.result)
+
+  })
+}
+const getAllLocations = ()=>{
+  axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/location/getAllLocations/`,{headers:{token:`${accessToken}`}})
+  .then(res=>{
+    setAllLocation(res.data.result)
 
   })
 }
@@ -224,7 +278,7 @@ const handelDeleterow = async(deleteRow)=>{
     return (
         <div className="row">
         <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
-          <Dashhead id={4} display={display} />
+          <Dashhead id={5} display={display} />
         </div>
     
         <div
@@ -277,7 +331,7 @@ const handelDeleterow = async(deleteRow)=>{
           <ToastContainer/>
             <div className="d-flex flex-column align-items-center ">
                 <div className="row">
-                    <div className="col-auto"><TextField id='outlined-basic' label="Doc" type='number' sx={{width:80}} 
+                    <div className="col-auto"><TextField id='outlined-basic' label="Doc" type='number' sx={{width:50}} 
                     value={docNo}
                        onChange={(e) => {
                         setDocNo(e.target.value);
@@ -293,7 +347,7 @@ const handelDeleterow = async(deleteRow)=>{
                   options={department}
                   getOptionLabel={(e)=>e.name}
                   onChange={(e,value)=>handelDepatment(value?.name)}
-                  sx={{ width: 300 }}
+                  sx={{ width: 150 }}
                   renderInput={(params) => <TextField {...params} label="Department" />}
                 />
 
@@ -303,10 +357,11 @@ const handelDeleterow = async(deleteRow)=>{
                     disablePortal
                     id="combo-box-demo"
                     // getOptionLabel={(product)=>product.itemCode}
-                    getOptionLabel={(product)=>`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`}
+                    getOptionLabel={(product)=>product?`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`:""}
                     options={allProducts.filter(product => product.department === selectedDepartment)}
                     // options={allProducts}
                     sx={{ width: 400 }}
+                    value={selectedProduct}
                     renderInput={(params) => <TextField {...params} label="Select item code,Product name" required/>}
                     onChange={(event, newValue) => {
                       setSelectedProduct(newValue);
@@ -318,6 +373,21 @@ const handelDeleterow = async(deleteRow)=>{
                         {...register("quantity", { required: true, })}
                       />
                       </div>
+                      {/* <div className="col-auto">
+                    <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    getOptionLabel={(location)=>location.locationName}
+                    // getOptionLabel={(product)=>`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`}
+                    // options={allProducts.filter(product => product.department === selectedDepartment)}
+                    options={allLocation}
+                    sx={{ width: 200 }}
+                    renderInput={(params) => <TextField {...params} label="Select Location" required/>}
+                    onChange={(event, newValue) => {
+                      setSelectedProduct(newValue);
+                      }}
+                    />
+                    </div> */}
                     <div className="col-auto"> 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker

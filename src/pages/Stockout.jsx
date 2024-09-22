@@ -281,8 +281,14 @@ const handleLogin = () => {
   const handleProducts = (val) => {
     setSelectedProduct(val);
     const selectedStock = allStocks.find(
-      (stock) => stock?.name === val?.productName
+      (stock) => stock?.product._id === val?._id
     );
+    // const selectedStock = allStocks.find((stock) => {
+    //   console.log(stock.product._id,"stokc"); // Log the stock name
+    //   console.log(val?._id,"val"); // Log the product name
+    //   return stock?.product._id === val?._id; // Return the condition
+    // });
+    
     setSelectedExpiry(null); // Reset selected expiry when changing product
     setSelectedStock(selectedStock);
     setSelectedExpiry(null); // Reset selected expiry when changing product
@@ -326,7 +332,7 @@ const handleLogin = () => {
   return (
     <div className="row">
       <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
-        <Dashhead id={5} display={display} />
+        <Dashhead id={6} display={display} />
       </div>
 
       <div

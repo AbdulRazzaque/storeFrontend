@@ -8,7 +8,7 @@ import Addmember from './pages/Addmember';
 import Stockin from './pages/Stockin';
 import Stockout from './pages/Stockout';
 import Stockoutpdf from './pages/Stockoutpdf';
-import Stock from './pages/Stock';
+
 import StockOutSearch from './pages/StockOutSearch';
 import StockInSearch from './pages/StockInSearch';
 import Orderdetails from './pages/Orderdetails';
@@ -29,6 +29,8 @@ import Departmetnlils from './components/Department list/Departmetnlils';
 import Orderdetailspdf from './components/Order/Orderdetailspdf';
 import ProtectedRoute from './pages/ProtectedRoute ';
 import Discardpdf from './pages/Discardpdf';
+import Location from './components/location/AddLocation';
+import AddLocation from './components/location/AddLocation';
 
 
 export const ThemeContext = createContext();
@@ -59,7 +61,7 @@ function App() {
           <ProtectedRoute exact path="/Stockin" component={Stockin} />
           <ProtectedRoute exact path="/Stockout" component={Stockout} />
           <ProtectedRoute exact path="/Stockoutpdf" component={Stockoutpdf} />
-          <ProtectedRoute exact path="/Stock" component={Stock} />
+ 
           <ProtectedRoute exact path="/StockOutSearch" component={StockOutSearch} />
           <ProtectedRoute exact path="/StockInSearch" component={StockInSearch} />
           <ProtectedRoute exact path="/Orderdetails" component={Orderdetails} />
@@ -78,6 +80,8 @@ function App() {
           <ProtectedRoute exact path="/Departmetnlils" component={Departmetnlils} />
           <ProtectedRoute exact path="/Orderdetailspdf" component={Orderdetailspdf} />
           <ProtectedRoute exact path="/Discardpdf" component={Discardpdf} />
+          <ProtectedRoute exact path="/AddLocation" component={AddLocation} />
+          
         </Switch>
       </ThemeContext.Provider>
     </ThemeProvider>

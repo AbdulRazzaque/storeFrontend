@@ -113,16 +113,6 @@ const fetchData = async () => {
 
 
 // ===============================================Member api=============================================================
-// const getAllMember = ()=>{
-//   axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/member/getAllMember/`,{headers:{token:`${accessToken}`}})
-//   .then(res=>{
-//     setAllMember(res.data.result)
-
-//     console.log(allMember)
-    
-//   })
-// }
-
 
 const getAllMember = () => {
   axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/member/getAllMember/`, { headers: { token: `${accessToken}` } })
