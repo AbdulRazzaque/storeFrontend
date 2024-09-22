@@ -16,58 +16,6 @@
 }
 
 
-.card1 {
-    background-color: #2E86AB !important; /* Dark turquoise */
-}
-
-.card1:hover {
-    background-color: #268EA6 ; /* Slightly darker turquoise on hover */
-}
-
-/* Card 2 */
-.card2 {
-    background-color: #E84545  !important; /* Red */
-}
-
-.card2:hover {
-    background-color: #CC3C3C; /* Slightly darker red on hover */
-}
-
-/* Card 3 */
-.card3 {
-    background-color: #41B3A3  !important; /* Sea green */
-}
-
-.card3:hover {
-    background-color: #38A895; /* Slightly darker sea green on hover */
-}
-
-/* Card 4 */
-.card4 {
-    background-color: #FFB366  !important; /* Orange */
-}
-
-.card4:hover {
-    background-color: #E5A856; /* Slightly darker orange on hover */
-}
-
-/* Card 5 */
-.card5 {
-    background-color: #9B59B6  !important; /* Purple */
-}
-
-.card5:hover {
-    background-color: #8E4FAB; /* Slightly darker purple on hover */
-}
-
-/* Card 6 */
-.card6 {
-    background-color: #F5D76E  !important; /* Yellow */
-}
-
-.card6:hover {
-    background-color: #E0C063; /* Slightly darker yellow on hover */
-}
 /* Animation for Card Hover */
 @keyframes cardHoverAnimation {
     0% {
@@ -148,6 +96,9 @@
     color: #7c4dff;
 }
 
-// .icon-microbiology {
-//     color: green;
-//   }
+
+
+.deparmentCard{
+    // sx={{ borderRadius: 4, padding: 2, boxShadow: 3 ,width:300, mx:3, my:3,cursor:"pointer"}}
+    border-radius: 4;
+}

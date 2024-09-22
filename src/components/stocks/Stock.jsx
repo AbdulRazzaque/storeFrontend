@@ -1,7 +1,5 @@
-
-
 import React, { useEffect, useState } from 'react'
-
+import './stock.css';
 import axios from 'axios';
 import moment from 'moment';
 import { Button, IconButton, TextField, Tooltip } from '@mui/material';
@@ -16,10 +14,12 @@ import Dashhead from '../Dashhead';
 import Darkmode from '../Darkmode';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useLocation } from 'react-router-dom/cjs/react-router-dom';
 
-const Heamotolgy = () => {
+const Stock = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -77,11 +77,12 @@ const Heamotolgy = () => {
     // { label: "Final Quantity", prop: "finalQuantity" }, // Adjusted prop name
   ];
   
-
+  const departmentName = location.state?.departmentName;
+  console.log(departmentName,"DepartMane")
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/HEAMOTOLGY`, {
+        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/${departmentName}`, {
           headers: { token: accessToken }
         });
   
@@ -112,7 +113,7 @@ const Heamotolgy = () => {
         setData(newData);
         sortData(newData); // Sorting newData by itemCode after setting the state
       } catch (error) {
-        console.error('Error fetching HEAMOTOLGY stock data:', error);
+        console.error('Error fetching Genetic stock data:', error);
       }
     };
   
@@ -161,7 +162,7 @@ const Heamotolgy = () => {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    saveAs(new Blob([excelBuffer], { type: 'application/octet-stream' }), 'HEAMOTOLGY stock.xlsx');
+    saveAs(new Blob([excelBuffer], { type: 'application/octet-stream' }), 'Genetic stock.xlsx');
   };
 
   
@@ -183,7 +184,7 @@ const Heamotolgy = () => {
   const handleSendData = () => {
     const dataToSend = selectedRows.map(row => ({
       ...row,
-      labName: 'HEAMOTOLGY Lab'
+      labName: 'Genetic Lab'
     }));
     dispatch(sendData(dataToSend));
     history.push('/Order');
@@ -306,14 +307,14 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
   return (
     <div className="row">
       <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
-        <Dashhead id={6} />
+        <Dashhead id={1} />
       </div>
       <div className="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-xl-10 dashboard-container">
-        <h1 className="my-5 title text-center">HEAMOTOLGY Stock</h1>
+        <h1 className="my-5 title text-center">{departmentName} Stock</h1>
         <ToastContainer/>
         <div className='icondivright'>
           <Tooltip title="Back">
-            <ArrowBackIcon className='exporticon' onClick={() => { history.push("/stock") }} />
+            <ArrowBackIcon className='exporticon' onClick={() => {  history.goBack()}} />
           </Tooltip>
         </div>
         <div className='icondiv'>
@@ -462,6 +463,4 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
   );
 };
 
-export default Heamotolgy;
-
-
+export default Stock;

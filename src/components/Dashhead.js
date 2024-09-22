@@ -47,6 +47,7 @@ const Dashhead = (props) => {
           key={item.id}
           className={props.id === item.id ? "menu-container-active" : "menu-container"}
           onClick={() => props.history.push(item.path)}
+          
         >
           <p>{item.icon} {item.label}</p>
         </div>
