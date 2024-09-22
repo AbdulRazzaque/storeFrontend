@@ -283,11 +283,7 @@ const handleLogin = () => {
     const selectedStock = allStocks.find(
       (stock) => stock?.product._id === val?._id
     );
-    // const selectedStock = allStocks.find((stock) => {
-    //   console.log(stock.product._id,"stokc"); // Log the stock name
-    //   console.log(val?._id,"val"); // Log the product name
-    //   return stock?.product._id === val?._id; // Return the condition
-    // });
+
     
     setSelectedExpiry(null); // Reset selected expiry when changing product
     setSelectedStock(selectedStock);

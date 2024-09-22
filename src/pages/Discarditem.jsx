@@ -249,10 +249,10 @@ const Discarditem = () => {
       });
   };
 
-  const getAllStocks = (value) => {
+  const getAllStocks = () => {
     axios
       .get(
-        `${process.env.REACT_APP_DEVELOPMENT}/api/stock/getAllStocks/${value}`,
+        `${process.env.REACT_APP_DEVELOPMENT}/api/stock/getAllStocks`,
         {
           headers: { token: accessToken },
         }
@@ -269,15 +269,16 @@ const Discarditem = () => {
   const handleProducts = (val) => {
     setSelectedProduct(val);
     const selectedStock = allStocks.find(
-      (stock) => stock.name === val.productName
+      (stock) => stock?.product._id === val?._id
     );
+
+    
     setSelectedExpiry(null); // Reset selected expiry when changing product
     setSelectedStock(selectedStock);
     setSelectedExpiry(null); // Reset selected expiry when changing product
   };
 
   // ===========================================Auto complete handel Deparment==========================================================================================
-
 
   const handelDepatment = (value) => {
     setSelectedDepartment(value);
@@ -296,21 +297,21 @@ const Discarditem = () => {
   // ==========================================================send print button data ==========================================================================================
 
   const handelPrintData = () => {
-    // if (stockOutData.length === 0) {
-    //   toast("Discard items first", {
-    //     position: "top-center",
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //     theme: "light",
-    //   });
-    // } 
-    // else {
+    if (stockOutData.length === 0) {
+      toast("Discard items first", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } 
+    else {
       history.push("/Discardpdf", { data: stockOutData });
-    // }
+    }
   };
 
   return (
