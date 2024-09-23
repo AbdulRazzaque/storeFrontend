@@ -14,7 +14,7 @@ import StockInSearch from './pages/StockInSearch';
 import Orderdetails from './pages/Orderdetails';
 import Discarditem from './pages/Discarditem';
 
-import Centralsection from './components/central section/Centralsection';
+import Centralsection from './components/stocks/Centralsection';
 
 import Order from './pages/Order';
 import Orderpdf from './components/Order/Orderpdf';

@@ -530,21 +530,18 @@ const Discarditem = () => {
             </div>
           
           </div>
-          <div>
-                <textarea 
-                 {...register("comment")}
+          <div className='text-center'>
+                <TextField
+                variant='outlined'
+                {...register("comment")}
                 value={comment}
                 onChange={(e,val) => setComment(val)}
-
-                  style={{
-                    padding: "10px",
-                    width: "60%",
-                    marginLeft:'180px',
-                    height: "80px",
-                  }}
-                  placeholder="Add commet"
-
-                />
+                sx={{ width: 1000 }}
+                multiline
+                label="Add commet"
+                minRows={3}
+                size='small'
+              />
                 </div>
           <div className="text-center my-5">
             <Button variant="contained" type="submit" className="">

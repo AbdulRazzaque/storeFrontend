@@ -1,14 +1,7 @@
 import React from 'react'
 import { Box, Tab, Tabs, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-// import Promotion from './Promotion';
-// import Award from './Award';
-// import Travel from './Travel';
-// import Transfer from './Transfer';
-// import Resignations from './Resignations';
-// import Complaints from './Complaints';
-// import Warning from './Warning';
-// import Terminations from './Terminations';
+
 const Departmetnlils = ({ departments ,onDepartmentSelect  }) => {
   // console.log(departments,'depamrtnt')
     //  =====================================logic==========================================================================
@@ -64,7 +57,7 @@ const Departmetnlils = ({ departments ,onDepartmentSelect  }) => {
   return (
     
         <div className="box">
-<Box sx={{ width: '100%', height:50}} className="bg-white my-2 mx-2   ">
+<Box sx={{ width: '100%', height:50}} className=" my-2 mx-2   ">
   <Box sx={{ borderBottom: 1,  borderColor: 'divider',}}>
     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" className='tabs'>
 
