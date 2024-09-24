@@ -33,12 +33,13 @@ const Stockin = () => {
     const [allProducts,setAllProducts] = React.useState([])
     const [allStocks,setAllStocks] = React.useState([])
     const [deleteRow,setDeleteRow] = React.useState([])
+    const [selectLocation,setSelectLocation] = React.useState([])
 // ========================================================================================================================================================
 const { register, handleSubmit, formState: { errors } } = useForm();
 const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo"
 
 // ========================================================================================================================================================
-console.log(allLocation,"allLocation")
+
 
     const department =[
       {name:'TCGC'},
@@ -64,21 +65,6 @@ console.log(allLocation,"allLocation")
           })
           .then((res) => {
             let arr = res.data.result.map((item, index) => {
-              const fieldsToCheck = [
-                'productName',
-                'lotNumber',
-                'manufacturer',
-                'physicalLocation',
-                'sku',
-                'supplierName',
-                'unit',
-                'addModel',
-              ];
-              fieldsToCheck.forEach((field) => {
-                if (item.itemCode.includes(item[field])) {
-                  item.itemCode = item.itemCode.replace(item[field], '');
-                }
-              });
               return { ...item, id: index + 1 };
             });
     
@@ -97,50 +83,17 @@ console.log(allLocation,"allLocation")
       getAllLocations();
     };
     
-    // const handelDepatment =(value)=>{
-    //   setSelectedDepartment(value)
-
-    //   console.log(value,"Here i am cheack")
-    //   const getAllProducts =(value)=>{
-    
-    //     axios
-    //       .get(`${process.env.REACT_APP_DEVELOPMENT}/api/product/getAllProducts`, {
-    //         headers: { token: accessToken },
-    //       })
-    //       .then(res=>{
-    //         let arr = res.data.result.map((item,index)=>{
-    //           const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
-    //           fieldsToCheck.forEach(field=>{
-    //             if(item.itemCode.includes(item[field])){
-    //               item.itemCode = item.itemCode.replace(item[field],'')
-    //             }
-    //           })
-    //           return {...item, id:index +1}
-    //         })
-      
-    //         let filteredProducts = arr;
-    //         if (value) {
-    //           console.log(value,'selectedDepartment')
-    //           filteredProducts = arr.filter(product => product.department === value);
-    //         }
-      
-    //         setAllProducts(filteredProducts)
-    //         console.log(filteredProducts,'filteredProducts')
-    //       })
-    //   }
-    //   getAllProducts()
-    //   getAllLocations()
-    // }
 
     // ================================================================post api code========================================================================================
+    const onSubmit = async(data,event) => {
 
-const onSubmit = async(data,event) => {
-  var obj={
-    department:selectedDepartment,
-    productName:selectedProduct.productName,
-    itemCode:selectedProduct.itemCode,
-    productId:selectedProduct._id,
-    expiry:selectedExpiry,
+      var obj={
+        department:selectedDepartment,
+        productName:selectedProduct.productName,
+        itemCode:selectedProduct.itemCode,
+        productId:selectedProduct._id,
+        expiry:selectedExpiry,
+    location:selectLocation.locationName,
     docNo,
     ...data
   }
@@ -204,12 +157,12 @@ const getAllProducts = ()=>{
   axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/product/getAllProducts`,{headers:{token:`${accessToken}`}})
   .then(res=>{
     let arr = res.data.result.map((item,index)=>{
-      const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
-      fieldsToCheck.forEach(field=>{
-        if(item.itemCode.includes(item[field])){
-          item.itemCode = item.itemCode.replace(item[field],'')
-        }
-      })
+      // const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
+      // fieldsToCheck.forEach(field=>{
+      //   if(item.itemCode.includes(item[field])){
+      //     item.itemCode = item.itemCode.replace(item[field],'')
+      //   }
+      // })
       return {...item, id:index +1}
     })
     setAllProducts(arr)
@@ -357,7 +310,9 @@ const handelDeleterow = async(deleteRow)=>{
                     disablePortal
                     id="combo-box-demo"
                     // getOptionLabel={(product)=>product.itemCode}
-                    getOptionLabel={(product)=>product?`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`:""}
+                    getOptionLabel={ (product)=>product? `${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`:""}
+                    // getOptionLabel={ (product)=> console.log(product,"chaeck")}
+                  
                     options={allProducts.filter(product => product.department === selectedDepartment)}
                     // options={allProducts}
                     sx={{ width: 400 }}
@@ -373,21 +328,21 @@ const handelDeleterow = async(deleteRow)=>{
                         {...register("quantity", { required: true, })}
                       />
                       </div>
-                      {/* <div className="col-auto">
+                      <div className="col-auto">
                     <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    getOptionLabel={(location)=>location.locationName}
+                    getOptionLabel={(location)=>location?location?.locationName:""}
                     // getOptionLabel={(product)=>`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`}
                     // options={allProducts.filter(product => product.department === selectedDepartment)}
                     options={allLocation}
                     sx={{ width: 200 }}
                     renderInput={(params) => <TextField {...params} label="Select Location" required/>}
                     onChange={(event, newValue) => {
-                      setSelectedProduct(newValue);
+                      setSelectLocation(newValue);
                       }}
                     />
-                    </div> */}
+                    </div>
                     <div className="col-auto"> 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
@@ -425,6 +380,7 @@ const handelDeleterow = async(deleteRow)=>{
             <TableCell >Item code</TableCell>
             <TableCell >Item description</TableCell>
             <TableCell >Quantity</TableCell>
+            <TableCell >Location name</TableCell>
             <TableCell >Expiry date</TableCell>
             {/* <TableCell >Edit</TableCell> */}
             <TableCell >Delete</TableCell>
@@ -436,9 +392,10 @@ const handelDeleterow = async(deleteRow)=>{
                     <TableRow key={row.id}>
                     <TableCell >{row.docNo}</TableCell>
                     <TableCell >{row.department}</TableCell>
-                    <TableCell>{row.itemCode}</TableCell>
+                    <TableCell>{row.itemCode.split(" ")[0]}</TableCell>
                     <TableCell >{row.productName}</TableCell>
                     <TableCell >{row.quantity}</TableCell>
+                    <TableCell >{row.location}</TableCell>
                     <TableCell >{moment.parseZone(row.expiry).local().format("DD/MM/YY")}</TableCell>
                     {/* <TableCell >{row.expiry}</TableCell> */}
                     {/* <TableCell ><IconButton onClick={()=>{handleOpenDialog(row)}}  ><EditIcon color='primary'  /></IconButton> </TableCell> */}

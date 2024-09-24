@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../components/Home.scss";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -55,7 +55,8 @@ const Stockout = () => {
   const [selectedStock, setSelectedStock] = React.useState(null);
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const [allLocation,setAllLocation] = React.useState([])
+  const [selectLocation,setSelectLocation] = React.useState([])
   // ========================================================================================================================================================
   console.log(allProducts,"allProducts")
   const history = useHistory();
@@ -128,6 +129,7 @@ const handleLogin = () => {
       memberName: selectedMember.memberName,
       department: selectedDepartment,
       quantity: data.quantity,
+      location:selectLocation.locationName,
       date: selectedDate,
       expiry: selectedExpiry ? selectedExpiry.expiry : null,
       expiryObject: selectedExpiry ? selectedExpiry : null,
@@ -277,6 +279,16 @@ const handleLogin = () => {
         }
       });
   };
+
+  const getAllLocations = ()=>{
+    axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/location/getAllLocations/`,{headers:{token:`${accessToken}`}})
+    .then(res=>{
+      setAllLocation(res.data.result)
+  
+    })
+  }
+  getAllLocations()
+  
   // ===========================================Auto complete handel product==========================================================================================
   const handleProducts = (val) => {
     setSelectedProduct(val);
@@ -304,8 +316,11 @@ const handleLogin = () => {
     console.log(value, "Here i am cheack");
 
     getAllProducts();
+
+
   };
 
+  console.log(allLocation,"alllocaion")
   // ==========================================================send print button data==========================================================================================
 
   const handelPrintData = () => {
@@ -488,6 +503,21 @@ const handleLogin = () => {
                 ></TextField>
               </div>
               <div className="col-auto">
+              <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    getOptionLabel={(location)=>location?location?.locationName:""}
+                    // getOptionLabel={(product)=>`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`}
+                    // options={allProducts.filter(product => product.department === selectedDepartment)}
+                    options={allLocation}
+                    sx={{ width: 200 }}
+                    renderInput={(params) => <TextField {...params} label="Select Location" required/>}
+                    onChange={(event, newValue) => {
+                      setSelectLocation(newValue);
+                      }}
+                    />
+              </div>
+              <div className="col-auto">
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
@@ -546,6 +576,7 @@ const handleLogin = () => {
                 <TableCell>Item code</TableCell>
                 <TableCell>Item description</TableCell>
                 <TableCell>Quantity</TableCell>
+                <TableCell>Location</TableCell>
                 <TableCell>Date</TableCell>
                 <TableCell>Expiry date</TableCell>
                 {/* <TableCell >Edit</TableCell> */}
@@ -565,6 +596,7 @@ const handleLogin = () => {
                     <TableCell>{item.memberName}</TableCell>
                     <TableCell>{item.product.itemCode.split(" ")[0]}</TableCell>
                     <TableCell>{item.productName}</TableCell>
+                    <TableCell>{item.location}</TableCell>
                     <TableCell>{item.quantity}</TableCell>
                     <TableCell>
                       {" "}
