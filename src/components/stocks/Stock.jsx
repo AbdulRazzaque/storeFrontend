@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from 'react'
 import './stock.css';
 import axios from 'axios';
@@ -28,14 +30,15 @@ const Stock = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [clickedSuggestion, setClickedSuggestion] = useState(false);
 
-  const filteredData = data.filter(item =>
+  // ==============================================search=====================================================================
+  const filteredData = data.map((item,index)=>item.productDetails.filter(item =>
     item.product && item.product.productName && (
       `${item.itemCode.split(" ")[0]} ${item.name} ${item.product.lotNumber}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.product.productName.toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
-  
-  console.log(filteredData, 'filteredData');
+  // console.log(data[1].productDetails,'data')
+  // console.log(filteredData, 'filteredData');
   
   // Adjust the unique item codes to include necessary details
   const uniqueItemCodes = [...new Set(filteredData.map(item => `${item.itemCode.split(" ")[0]} ${item.name} ${item.product.lotNumber}`))];
@@ -52,110 +55,45 @@ const Stock = () => {
       setClickedSuggestion(true); // Set the flag to indicate a suggestion has been clicked
     }
   };
+  // ==============================================url=====================================================================
+  //
   const url = process.env.REACT_APP_DEVELOPMENT
-
-
-  const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo"
-
-
-  console.log(data,'data')
-
-
-
-  
-  // Columns setup
-  const columns = [
-    { label: "S.N", prop: "id" },
-    { label: "Item Code", prop: "itemCode" },
-    { label: "Expiry Dates", prop: "expiry" },
-    { label: "Total Quantity", prop: "totalQuantity" },
-    { label: "Product Name", prop: "product.productName" },
-    { label: "S.K.U", prop: "product.sku" },
-    { label: "Lot Number", prop: "product.lotNumber" },
-    { label: "Manufacturer", prop: "product.manufacturer" },
-    { label: "Range"},
-    // { label: "Final Quantity", prop: "finalQuantity" }, // Adjusted prop name
-  ];
-  
   const departmentName = location.state?.departmentName;
-  console.log(departmentName,"DepartMane")
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/${departmentName}`, {
-          headers: { token: accessToken }
+  // console.log(departmentName,"DepartMane")
+  // ==============================================Get api====================================================================
+  
+
+  const getAllStocksByDepartment =async()=>{
+    try {
+    const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/${departmentName}`, {
+  
         });
-  
-        const newData = response.data.result.map((item, index) => {
-          // Check if expiryArray exists and is an array before using it
-          const totalQuantity = Array.isArray(item.expiryArray) 
-            ? item.expiryArray.reduce((acc, curr) => acc + curr.quantity, 0)
-            : 0;
-          const expiryDates = Array.isArray(item.expiryArray) 
-            ? item.expiryArray.map(e => e.expiry).join(', ')
-            : 'No expiry info';
-  
-          // Replace supplierName with **** in itemCode
-          let cleanItemCode = item.product && item.product.itemCode ? item.product.itemCode : 'ProductDeleted';
-          if (item.product && item.product.supplierName) {
-            cleanItemCode = cleanItemCode.replace(item.product.supplierName, '****');
-          }
-  
-          return {
-            ...item,
-            id: index + 1,
-            totalQuantity,
-            expiry: expiryDates,
-            itemCode: cleanItemCode
-          };
-        });
-  
-        setData(newData);
-        sortData(newData); // Sorting newData by itemCode after setting the state
-      } catch (error) {
-        console.error('Error fetching Genetic stock data:', error);
-      }
-    };
-  
-    fetchData();
-  }, [url, accessToken]);
-  
-  
-  
-  useEffect(() => {
+        setData(response.data.result)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  const getColorChange =()=>{
     const updatedRowSettings = data.map(item => {
       const existingSetting = rowSettings.find(setting => setting.id === item._id);
       return existingSetting || { id: item._id, start: item.start, end: item.end, startColor: item.startColor, endColor: item.endColor };
     });
     setRowSettings(updatedRowSettings);
-  }, [data]); // Only run this effect when `data` changes
+  }
   
-  
-  const sortData = (dataToSort) => {
-    let sortedData = [...dataToSort]; // Creating a copy of the original array
-    sortedData = sortedData.sort((a, b) => {
-      const codeA = parseInt((a.itemCode.match(/\d+/) || [0])[0], 10);
-      const codeB = parseInt((b.itemCode.match(/\d+/) || [0])[0], 10);
-      return codeA - codeB;
-    });
-    setData(sortedData); // Updating the state with the sorted array
-  };
-  
-  
+  useEffect(()=>{
+    getAllStocksByDepartment()
+    getColorChange()
+  },[])
   
   
 
-  const handleRowSelectionChange = (event, row) => {
-    const isChecked = event.target.checked;
-    setSelectedRows(prev => {
-      if (isChecked) {
-        return [...prev, row];
-      } else {
-        return prev.filter(r => r.id !== row.id);
-      }
-    });
-  };
- 
+  
+  
+  // =====================================================Xl Export Data========================================================================
+  
   const handleExport = () => {
     
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -165,7 +103,7 @@ const Stock = () => {
     saveAs(new Blob([excelBuffer], { type: 'application/octet-stream' }), 'Genetic stock.xlsx');
   };
 
-  
+  // =================================================Pagination Code========================================================================
   // Calculate total number of pages
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
@@ -174,52 +112,13 @@ const Stock = () => {
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
   const currentData = filteredData.slice(indexOfFirstRow, indexOfLastRow);
 
-
-
-  console.log(currentData,'currentData')
-
+  
+  // const totalsByCode = calculateTotalsByCode(currentData);
   
 
-
-  const handleSendData = () => {
-    const dataToSend = selectedRows.map(row => ({
-      ...row,
-      labName: 'Genetic Lab'
-    }));
-    dispatch(sendData(dataToSend));
-    history.push('/Order');
-  };
-
-
-
-  const calculateTotalsByCode = (data) => {
-    const totals = {};
-    data.forEach((item) => {
-      const codeMatch = item.itemCode.match(/\d+/);
+  // =================================================Color Code========================================================================
   
-      if (codeMatch) {
-        const code = codeMatch[0];
-        totals[code] = (totals[code] || 0) + item.totalQuantity;
-      }
-    });
-    return totals;
-  };
-  
-  const totalsByCode = calculateTotalsByCode(currentData);
-  
-  const calculateLastIndexes = (data) => {
-    const lastIndex = {};
-    data.forEach((item, index) => {
-      const codeMatch = item.itemCode.match(/\d+/);
-      if (codeMatch) {
-        const code = codeMatch[0];
-        lastIndex[code] = index; // Update to the current index as last index
-      }
-    });
-    return lastIndex;
-  };
-  
-  const lastIndexes = calculateLastIndexes(currentData);
+  // const lastIndexes = calculateLastIndexes(currentData);
 
   const handleSettingsChange = (index, start, end, startColor, endColor) => {
     setRowSettings(prevSettings => {
@@ -255,7 +154,8 @@ const updateStockSettings = async (id, start, end, startColor, endColor) => {
   }
   try {
     const response=  await axios.put(`${process.env.REACT_APP_DEVELOPMENT}/api/stock/updateStockSettings`, {...obj},
-    {headers:{token:`${accessToken}`}})
+
+  )
       return response.data;
   } catch (error) {
       console.error(error);
@@ -298,10 +198,13 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
 
 
 
+// **************************************************End*****************************************************************************************************
 
+// console.log(
+//   data.map((item,index)=>item.productDetails
+// .map((val,i)=>val))
 
-  // const filteredData = currentData.filter(item => item.itemCode.toLowerCase().includes(searchQuery.toLowerCase()));
-// Filter data based on search query
+// )
 
   
   return (
@@ -339,7 +242,7 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
       />
           </div>
  
-          <div>
+          {/* <div>
     {searchQuery.length > 0 && !clickedSuggestion && (
       <div className="suggestions">
         {uniqueItemCodes
@@ -357,10 +260,10 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
     )}
     {clickedSuggestion && filteredData.length > 0 && (
       <div className="filtered-results">
-        {/* Display filtered data here */}
+     
       </div>
     )}
-  </div>
+  </div> */}
 
     </div>
 <div className='text-right my-3'>
@@ -371,21 +274,23 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
 
         <table className="table">
           <thead>
-            <tr>
-              {columns.map(col => (
-                <th key={col.prop}>{col.label}</th>
-              ))}
-              
-            </tr>
+            <tr>S.N</tr>
+            <tr>Item Code</tr>
+            <tr>Total Quantity</tr>
+            <tr>Product Name</tr>
+            <tr>S.K.U</tr>
+            <tr>Lot Number</tr>
+            <tr>Manufacturer</tr>
+            <tr>Range</tr>
           </thead>
           
          
          <tbody>
-          {currentData.map((item, index) => {
+          {/* {currentData.map((item, index) => {
             const codeMatch = item.itemCode.match(/\d+/);
             const code = codeMatch ? codeMatch[0] : null;
-            const showExtraRow = index === lastIndexes[code];
-            const rowColor = getColorForIndex(index, item.totalQuantity);
+            // const showExtraRow = index === lastIndexes[code];
+            const rowColor = getColorForIndex(index, item.totalQuantity); */}
 
             return (
               <React.Fragment key={index}>
@@ -427,11 +332,7 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
                     <Button variant='contained' size="small" className='ml-3' onClick={() => handleUpdateSettings(item._id, rowSettings[index]?.start, rowSettings[index]?.end, rowSettings[index]?.startColor, rowSettings[index]?.endColor)}>Update Range</Button>
                   </td>
                 </tr>
-                {showExtraRow && (
-                  <tr>
-                    <td colSpan="9">Total Quantity for item code <span className="badge badge-primary tabel_itemcode">{item.itemCode.split(' ')[0]}</span>: <span className="badge badge-success tabel_itemcode_total">{totalsByCode[code]}</span></td>
-                  </tr>
-                )}
+          
               </React.Fragment>
             );
           })}
