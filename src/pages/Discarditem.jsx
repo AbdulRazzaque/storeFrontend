@@ -1,12 +1,13 @@
 
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import "../components/Home.scss";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Dashhead from "../components/Dashhead";
 import Darkmode from "../components/Darkmode";
 import {
+  Alert,
   Autocomplete,
   Button,
   Dialog,
@@ -57,6 +58,8 @@ const Discarditem = () => {
   const [selectedStock, setSelectedStock] = React.useState(null);
   const [deleteRow, setDeleteRow] = React.useState([]);
   const [comment, setComment] = useState([]);
+  const [allLocation,setAllLocation] = React.useState([])
+  const [selectedLocation, setSelectedLocation] = React.useState(null)
   // ========================================================================================================================================================
   const history = useHistory();
   const {
@@ -113,6 +116,7 @@ const Discarditem = () => {
       productName: selectedProduct.productName,
       productId: selectedProduct._id,
       product: selectedProduct,
+      location:selectedLocation?.locationName,
       memberName: selectedMember.memberName,
       department: selectedDepartment,
       quantity: data.quantity,
@@ -265,14 +269,22 @@ const Discarditem = () => {
         }
       });
   };
+
+  const getAllLocations = ()=>{
+    axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/location/getAllLocations/`,{headers:{token:`${accessToken}`}})
+    .then(res=>{
+      setAllLocation(res.data.result)
+  
+    })
+  }
   // ===========================================Auto complete handel product==========================================================================================
   const handleProducts = (val) => {
     setSelectedProduct(val);
     const selectedStock = allStocks.find(
-      (stock) => stock?.product._id === val?._id
+      (stock) => stock?.product?._id === val?._id
     );
 
-    
+    getAllLocations()
     setSelectedExpiry(null); // Reset selected expiry when changing product
     setSelectedStock(selectedStock);
     setSelectedExpiry(null); // Reset selected expiry when changing product
@@ -313,7 +325,12 @@ const Discarditem = () => {
       history.push("/Discardpdf", { data: stockOutData });
     }
   };
-
+  useEffect(() => {
+    // Reset selectedLocation if selectedStock has no location
+    if (!selectedStock?.expiryArray?.[0]?.location) {
+      setSelectedLocation(null); // Clear the location if stock has no location field
+    }
+  }, [selectedStock]);
   return (
     <div className="row">
       <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
@@ -387,13 +404,13 @@ const Discarditem = () => {
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
-                  getOptionLabel={(e) => `${e.memberName}  ${e.department}`}
+                  getOptionLabel={(e) => `${e?.memberName}  ${e?.department}`}
                   options={allMember}
                   onChange={(e, val) => {
                     setSelectedMember(val);
-                    setSelectedDepartment(val.department);
-                    getAllProducts(val.department);
-                    getAllStocks(val.department);
+                    setSelectedDepartment(val?.department);
+                    getAllProducts(val?.department);
+                    getAllStocks(val?.department);
                   }}
                   sx={{ width: 250 }}
                   renderInput={(params) => (
@@ -412,7 +429,7 @@ const Discarditem = () => {
                     e.department == undefined ? e : e.department
                   }
                   value={selectedDepartment}
-                  onChange={(e, value) => handelDepatment(value.department)}
+                  onChange={(e, value) => handelDepatment(value?.department)}
                   sx={{ width: 300 }}
                   renderInput={(params) => (
                     <TextField {...params} label="Department" />
@@ -489,17 +506,58 @@ const Discarditem = () => {
                 ></TextField>
               </div>
               <div className="col-auto">
+              <Autocomplete
+                  disablePortal
+                  id="location-autocomplete"
+                  getOptionLabel={(location) => location ? location.locationName : ""}
+                  options={allLocation}
+                  sx={{ width: 200 }}
+                  value={selectedLocation}
+                  // Disable if the first item in expiryArray has no location
+                  disabled={!selectedStock?.expiryArray?.[0]?.location}
+                  renderInput={(params) => (
+                    <TextField {...params} 
+                      label="Select Location" 
+                      required={!!selectedStock?.expiryArray?.[0]?.location} 
+                    />
+                  )}
+                  onChange={(event, newValue) => {
+                    setSelectedLocation(newValue);
+                    setSelectedExpiry(null); // Reset expiry when location changes
+                  }}
+                />
+                {selectedStock && (
+                  selectedStock?.expiryArray[0]?.location ? (
+                    <Alert severity="success" className="my-2" sx={{ height: "40px" }}>
+                      Location Field Exists.
+                    </Alert>
+                  ) : (
+                    <Alert severity="info" className="my-2" sx={{ height: "40px" }}>
+                      Location Field Does Not Exist.
+                    </Alert>
+                  )
+                )}
+
+              </div>
+              <div className="col-auto">
                 <Autocomplete
                   disablePortal
+            
                   id="combo-box-demo"
                   value={selectedExpiry}
-                  options={
-                    selectedStock
-                      ? selectedStock.expiryArray.filter(
-                          (opt) => opt.quantity > 0
-                        )
-                      : []
-                  }
+              
+              options={
+                selectedStock
+                  ? selectedStock.expiryArray.filter((opt) => 
+                      opt.quantity > 0 &&
+                      (
+                        // Show the entry if location is missing in the database OR if location matches the selected one
+                        !selectedLocation || !opt.location || (opt.location?.trim() === selectedLocation.locationName.trim())
+                      )
+                    )
+                  : []
+              }
+              
                   getOptionLabel={(opt) => {
                     // Assuming opt is an object with 'expiry' property
                     return moment
@@ -561,6 +619,7 @@ const Discarditem = () => {
                 <TableCell>Item code</TableCell>
                 <TableCell>Item description</TableCell>
                 <TableCell>Quantity</TableCell>
+                <TableCell>Location</TableCell>
                 <TableCell>Date</TableCell>
                 <TableCell>Expiry date</TableCell>
                 {/* <TableCell >Edit</TableCell> */}
@@ -578,6 +637,7 @@ const Discarditem = () => {
                     <TableCell>{item.itemCode}</TableCell>
                     <TableCell>{item.productName}</TableCell>
                     <TableCell>{item.quantity}</TableCell>
+                    <TableCell>{item?.location || ""}</TableCell>
                     <TableCell>
                       {" "}
                       {moment.parseZone(item.date).local().format("DD/MM/YY")}

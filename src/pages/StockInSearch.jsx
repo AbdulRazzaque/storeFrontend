@@ -49,6 +49,7 @@ const department =[
       { field: 'id', headerName:'No' , width: 70 },
       { field: 'name', headerName:'Products Name' , width: 150 },
       { field: 'department', headerName:'Department' , width: 150 },
+      { field: 'location', headerName:'Location' , width: 150 },
       { field: 'quantity', headerName: 'Quantity' ,width: 150 },
       {field: "createdAt",headerName: "Date", type:'date',width: 150, valueGetter:(rowData)=>moment(rowData.row.createdAt).format("DD/MM/YYYY") },
       {field: "expiry",headerName: "Expiry Date", type:'date',width: 150,valueGetter:(rowData)=>moment(rowData.row.expiry).format("DD/MM/YYYY")},
@@ -220,8 +221,10 @@ const handleExport = () => {
         options={allProducts}
         value={product}
         sx={{ width: 400 }}
-        onChange={handleProductChange}
-        getOptionLabel={(option) => option.productName}
+        onChange={handleProductChange} 
+        // getOptionLabel={(option) => option.productName}
+        getOptionLabel={(product) =>` ${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber}`}
+
         renderInput={(params) => (
           <TextField
             {...params}

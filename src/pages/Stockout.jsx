@@ -5,6 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Dashhead from "../components/Dashhead";
 import Darkmode from "../components/Darkmode";
 import {
+  Alert,
   Autocomplete,
   Button,
   Dialog,
@@ -56,7 +57,7 @@ const Stockout = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [allLocation,setAllLocation] = React.useState([])
-  const [selectLocation,setSelectLocation] = React.useState([])
+  const [selectedLocation, setSelectedLocation] = React.useState(null)
   // ========================================================================================================================================================
   console.log(allProducts,"allProducts")
   const history = useHistory();
@@ -68,7 +69,9 @@ const Stockout = () => {
   } = useForm();
   const accessToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo";
-  // console.log(selectedStock)
+  // console.log(selectedStock?.expiryArray[0].location,"selectedStock")
+  console.log(selectedStock,"selectedStock")
+console.log(selectedLocation,"locationName")
   // =========================================================Dempartment===============================================================================================
   const department = [
     { name: "TCGC" },
@@ -129,18 +132,19 @@ const handleLogin = () => {
       memberName: selectedMember.memberName,
       department: selectedDepartment,
       quantity: data.quantity,
-      location:selectLocation.locationName,
+      location:selectedLocation,
       date: selectedDate,
       expiry: selectedExpiry ? selectedExpiry.expiry : null,
       expiryObject: selectedExpiry ? selectedExpiry : null,
       docNo: parseInt(data.docNo),
     };
-    console.log(obj);
+    console.log(obj,"obj");
     setSelectedProduct(null);
     setSelectedStock(null);
-
+    setSelectedLocation(null)
     // setSelectedMember(null)
     setSelectedExpiry(null);
+
     setValue("quantity", "");
     // setValue("price","")
 
@@ -206,6 +210,8 @@ const handleLogin = () => {
   };
 
   const handelDeleterow = async (deleteRow) => {
+    console.log(deleteRow.expiry,'row chaeck')
+    const locationValue = deleteRow.location ? deleteRow.location : "";
     axios
       .post(
         `${process.env.REACT_APP_DEVELOPMENT}/api/stock/deleteStockOut`,
@@ -213,6 +219,7 @@ const handleLogin = () => {
           stockOutId: deleteRow._id,
           quantity: parseInt(deleteRow.quantity),
           expiry: deleteRow.expiry,
+          location:locationValue,
           productName: deleteRow.productName,
         },
         { headers: { token: accessToken } }
@@ -287,19 +294,22 @@ const handleLogin = () => {
   
     })
   }
-  getAllLocations()
-  
+
   // ===========================================Auto complete handel product==========================================================================================
   const handleProducts = (val) => {
     setSelectedProduct(val);
-    const selectedStock = allStocks.find(
-      (stock) => stock?.product._id === val?._id
+    setSelectedLocation(null)
+    const selectedStock = allStocks?.find(
+      (stock) => stock?.product?._id === val?._id
     );
 
     
+    getAllLocations()
     setSelectedExpiry(null); // Reset selected expiry when changing product
     setSelectedStock(selectedStock);
     setSelectedExpiry(null); // Reset selected expiry when changing product
+
+  
   };
 
   // ===========================================Auto complete handel Deparment==========================================================================================
@@ -339,7 +349,14 @@ const handleLogin = () => {
       history.push("/Stockoutpdf", { data: stockOutData });
     }
   };
-
+      useEffect(() => {
+        // Reset selectedLocation if selectedStock has no location
+        if (!selectedStock?.expiryArray?.[0]?.location) {
+          setSelectedLocation(null); // Clear the location if stock has no location field
+        }
+      }, [selectedStock]);
+console.log(selectedLocation,"selectedLocation")
+      console.log(allStocks, "allStocks");
   return (
     <div className="row">
       <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
@@ -482,7 +499,7 @@ const handleLogin = () => {
                   disablePortal
                   id="combo-box-demo"
                   options={allProducts}
-                  getOptionLabel={(e) => `${e.itemCode.split(" ")[0]} ${e.productName} ${e.lotNumber} ${e.physicalLocation}`}
+                  getOptionLabel={(e) => `${e.itemCode.split(" ")[0]} ${e.productName} ${e.lotNumber} `}
                   isSearchable
                   value={selectedProduct}
                   onChange={(e, val) => handleProducts(val)}
@@ -499,36 +516,88 @@ const handleLogin = () => {
                   type="number"
                   sx={{ width: 120 }}
                   required
+                 
                   {...register("quantity", { required: true })}
                 ></TextField>
               </div>
               <div className="col-auto">
-              <Autocomplete
+                        <Autocomplete
                     disablePortal
-                    id="combo-box-demo"
-                    getOptionLabel={(location)=>location?location?.locationName:""}
-                    // getOptionLabel={(product)=>`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`}
-                    // options={allProducts.filter(product => product.department === selectedDepartment)}
-                    options={allLocation}
+                    id="location-autocomplete"
                     sx={{ width: 200 }}
-                    renderInput={(params) => <TextField {...params} label="Select Location" required/>}
+                    value={selectedLocation}
+                    // Ensure getOptionLabel returns a valid string
+                    // Ensure getOptionLabel returns a valid string
+  getOptionLabel={(option) => (option ? option : "")}
+
+  // Logic to check if expiryArray contains location, fallback to product physicalLocation
+        //      options={
+        //    selectedStock?.expiryArray && selectedStock?.expiryArray.length > 0
+        //  ? selectedStock?.expiryArray.map(() => selectedStock?.product?.physicalLocation) // Assuming no location field in expiryArray, fallback to product location
+        //   : [selectedStock?.product?.physicalLocation] // fallback to product physicalLocation
+        // }
+        options={
+          [selectedStock?.product?.physicalLocation]
+        }
+                    
+                    // Disable if no expiryArray exists
+                    // disabled={!selectedStock?.expiryArray?.length}
+                    
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Location"
+                        required
+                      />
+                    )}
+                                                                  
                     onChange={(event, newValue) => {
-                      setSelectLocation(newValue);
-                      }}
-                    />
+                      setSelectedLocation(newValue); 
+                      console.log("Selected Location:", newValue);  
+                    }}
+          />
+
+                {/* {selectedStock && (
+                  selectedStock?.expiryArray[0]?.location ? (
+                    <Alert severity="success" className="my-2" sx={{ height: "40px" }}>
+                      Location Field Exists.
+                    </Alert>
+                  ) : (
+                    <Alert severity="info" className="my-2" sx={{ height: "40px" }}>
+                      Location Field Does Not Exist.
+                    </Alert>
+                  )
+                )} */}
+
               </div>
               <div className="col-auto">
                 <Autocomplete
                   disablePortal
+            
                   id="combo-box-demo"
                   value={selectedExpiry}
-                  options={
-                    selectedStock
-                      ? selectedStock.expiryArray.filter(
-                          (opt) => opt.quantity > 0
-                        )
-                      : []
-                  }
+              
+              options={
+              selectedStock
+              ? selectedStock.expiryArray.filter((opt) => opt.quantity > 0)
+              : []
+          }
+          // =========================Ye code mai ne stock expiryArray k ander Arrlocation ka hai ager array k under loction na mily to sotok k loction dikho===================================
+          //     options={
+          //     selectedStock
+          //     ? selectedStock.expiryArray.filter((opt) => opt.quantity > 0 &&
+          //     opt.location?.trim() === selectedLocation?.trim()
+
+          //   )
+          //     : 
+                  
+
+          //     selectedStock
+          //     ? selectedStock.expiryArray.filter((opt) => opt.quantity > 0)
+          //     : []
+   
+          // }
+              
                   getOptionLabel={(opt) => {
                     // Assuming opt is an object with 'expiry' property
                     return moment
@@ -596,8 +665,8 @@ const handleLogin = () => {
                     <TableCell>{item.memberName}</TableCell>
                     <TableCell>{item.product.itemCode.split(" ")[0]}</TableCell>
                     <TableCell>{item.productName}</TableCell>
-                    <TableCell>{item.location}</TableCell>
                     <TableCell>{item.quantity}</TableCell>
+                    <TableCell>{item?.location || ""}</TableCell>
                     <TableCell>
                       {" "}
                       {moment.parseZone(item.date).local().format("DD/MM/YY")}

@@ -100,7 +100,7 @@ const Orderpdf = () => {
           </div>
           <div className="col-8">
 
-            <h2>Request of Purchase Tharb Lab Stroe <span className="text-lowercase">{orderData.orderType}</span> </h2>
+            <h2>Request of Purchase Tharb Lab Store <span className="text-lowercase">{orderData.orderType}</span> </h2>
           </div>
 
 

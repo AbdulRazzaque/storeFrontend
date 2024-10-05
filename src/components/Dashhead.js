@@ -20,7 +20,7 @@ const Dashhead = (props) => {
     { id: 1, label: "Dashboard", icon: <Dashboard />, path: "/Home" },
     { id: 2, label: "Add Product", icon: <NoteAdd />, path: "Addproduct" },
     { id: 3, label: "Add Member", icon: <PersonAdd />, path: "Addmember" },
-    { id: 4, label: "Add Location", icon: <AddLocationIcon />, path: "AddLocation" },
+    // { id: 4, label: "Add Location", icon: <AddLocationIcon />, path: "AddLocation" },
     { id: 5, label: "Stock-in", icon: <Add />, path: "Stockin" },
     { id: 6, label: "Stock-out",  icon: <img src={stockOut} alt="Stock Out" width={22} className="image_brightnes" />,  path: "Stockout" },
     { id: 8, label: "Stock-Out Search", icon: <img src={stockoutsearch} alt="Stock-Out Search" width={22} className="image_brightnes"/>, path: "StockOutSearch" },

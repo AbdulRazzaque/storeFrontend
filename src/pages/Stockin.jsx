@@ -34,6 +34,7 @@ const Stockin = () => {
     const [allStocks,setAllStocks] = React.useState([])
     const [deleteRow,setDeleteRow] = React.useState([])
     const [selectLocation,setSelectLocation] = React.useState([])
+    // const [filteredLocations, setFilteredLocations] = useState([]);
 // ========================================================================================================================================================
 const { register, handleSubmit, formState: { errors } } = useForm();
 const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo"
@@ -93,7 +94,7 @@ const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbW
         itemCode:selectedProduct.itemCode,
         productId:selectedProduct._id,
         expiry:selectedExpiry,
-    location:selectLocation.locationName,
+        location:selectLocation.physicalLocation,
     docNo,
     ...data
   }
@@ -136,6 +137,7 @@ try {
 
 ;
 }
+
 // ==================================================================Get api code=======================================================
 const getAllMember = ()=>{
   axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/member/getAllMember/`,{headers:{token:`${accessToken}`}})
@@ -225,8 +227,39 @@ const handelDeleterow = async(deleteRow)=>{
   
 }
 
+console.log(allProducts,'allprodts')
 
 
+// const handleProductChange = (event, newValue) => {
+//   setSelectedProduct(newValue);
+
+//   if (newValue) {
+//     // Log newValue to verify that you are selecting the right product
+//     console.log('Selected Product:', newValue);
+
+//     // Log allProducts to check the data structure
+//     console.log('All Products:', allProducts);
+
+//     // Filter products with matching itemCode and productName
+//     const matchingLocations = allProducts
+//       .filter(
+//         (product) =>
+//           product.itemCode.split(" ")[0] === newValue.itemCode.split(" ")[0] &&
+//           product.productName === newValue.productName
+//       )
+//       .map((product) => product.physicalLocation); // Extract matching locations
+
+//     // Log the matching locations to see what we get
+//     console.log('Matching Locations:', matchingLocations);
+
+//     // Update the filtered locations state with all matching locations
+//     setFilteredLocations(matchingLocations);
+//   } else {
+//     // Clear filtered locations if no product is selected
+//     setFilteredLocations([]);
+//   }
+// };
+// console.log(filteredLocations,'filteredLocations')
 // =============================================================================================================================
     return (
         <div className="row">
@@ -306,43 +339,55 @@ const handelDeleterow = async(deleteRow)=>{
 
                     </div>
                     <div className="col-auto">
-                    <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    // getOptionLabel={(product)=>product.itemCode}
-                    getOptionLabel={ (product)=>product? `${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`:""}
-                    // getOptionLabel={ (product)=> console.log(product,"chaeck")}
-                  
-                    options={allProducts.filter(product => product.department === selectedDepartment)}
-                    // options={allProducts}
-                    sx={{ width: 400 }}
-                    value={selectedProduct}
-                    renderInput={(params) => <TextField {...params} label="Select item code,Product name" required/>}
-                    onChange={(event, newValue) => {
-                      setSelectedProduct(newValue);
-                      }}
-                    />
-                    </div>
+        <Autocomplete
+          disablePortal
+          id="product-autocomplete"
+          getOptionLabel={(product) =>
+            product
+              ? `${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber}`
+              : ""
+          }
+          options={allProducts.filter(
+            (product) => product.department === selectedDepartment
+          )}
+          sx={{ width: 400 }}
+          value={selectedProduct}
+          renderInput={(params) => (
+            <TextField {...params} label="Select item code, Product name" required />
+          )}
+          // onChange={handleProductChange}
+          onChange={(event, newValue) => {
+            setSelectedProduct(newValue); 
+            setSelectLocation(null); 
+    
+          }}
+        />
+      </div>
                     <div className="col-auto">
                       <TextField id='outlined-basic' label="Quantity" type='number' sx={{width:120}} required 
                         {...register("quantity", { required: true, })}
                       />
                       </div>
                       <div className="col-auto">
-                    <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    getOptionLabel={(location)=>location?location?.locationName:""}
-                    // getOptionLabel={(product)=>`${product.itemCode.split(" ")[0]} ${product.productName} ${product.lotNumber} ${product.physicalLocation}`}
-                    // options={allProducts.filter(product => product.department === selectedDepartment)}
-                    options={allLocation}
-                    sx={{ width: 200 }}
-                    renderInput={(params) => <TextField {...params} label="Select Location" required/>}
-                    onChange={(event, newValue) => {
-                      setSelectLocation(newValue);
-                      }}
-                    />
-                    </div>
+        <Autocomplete
+          disablePortal
+          id="location-autocomplete"
+          // getOptionLabel={(location) => location || ""}
+          getOptionLabel={(product) => product?.physicalLocation || ""}
+          // options={filteredLocations} // Show all matching locations
+          // options={allProducts}
+          value={selectLocation}
+          options={selectedProduct ? [selectedProduct] : []} // Show location only from the selected product
+          sx={{ width: 200 }}
+          renderInput={(params) => (
+            <TextField {...params} label="Select Location" required />
+          )}
+          onChange={(event, newValue) => {
+            setSelectLocation(newValue); 
+    
+          }}
+        />
+      </div>
                     <div className="col-auto"> 
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
