@@ -526,23 +526,10 @@ console.log(selectedLocation,"selectedLocation")
                     id="location-autocomplete"
                     sx={{ width: 200 }}
                     value={selectedLocation}
-                    // Ensure getOptionLabel returns a valid string
-                    // Ensure getOptionLabel returns a valid string
-  getOptionLabel={(option) => (option ? option : "")}
-
-  // Logic to check if expiryArray contains location, fallback to product physicalLocation
-        //      options={
-        //    selectedStock?.expiryArray && selectedStock?.expiryArray.length > 0
-        //  ? selectedStock?.expiryArray.map(() => selectedStock?.product?.physicalLocation) // Assuming no location field in expiryArray, fallback to product location
-        //   : [selectedStock?.product?.physicalLocation] // fallback to product physicalLocation
-        // }
+                 getOptionLabel={(option) => (option ? option : "")}
         options={
           [selectedStock?.product?.physicalLocation]
         }
-                    
-                    // Disable if no expiryArray exists
-                    // disabled={!selectedStock?.expiryArray?.length}
-                    
                     renderInput={(params) => (
                       <TextField
                         {...params}

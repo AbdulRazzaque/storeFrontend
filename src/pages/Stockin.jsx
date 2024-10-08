@@ -175,7 +175,7 @@ const getAllProducts = ()=>{
 useEffect(() => {
   axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/stock/getStockInDocNo`,{headers:{token:`${accessToken}`}})
   .then(res=>{
-
+  
     if(res.data.result.length>0){
       setDocNo(res.data.result[0].docNo+1)
     }
@@ -317,7 +317,7 @@ console.log(allProducts,'allprodts')
           <ToastContainer/>
             <div className="d-flex flex-column align-items-center ">
                 <div className="row">
-                    <div className="col-auto"><TextField id='outlined-basic' label="Doc" type='number' sx={{width:50}} 
+                    <div className="col-auto"><TextField id='outlined-basic' label="Doc" type='number' sx={{width:70}} 
                     value={docNo}
                        onChange={(e) => {
                         setDocNo(e.target.value);

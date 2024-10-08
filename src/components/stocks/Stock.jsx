@@ -35,7 +35,7 @@ const Stock = () => {
     )
   );
   
-  console.log(filteredData, 'filteredData');
+  // console.log(filteredData, 'filteredData');
   
   // Adjust the unique item codes to include necessary details
   const uniqueItemCodes = [...new Set(filteredData.map(item => `${item.itemCode.split(" ")[0]} ${item.name} ${item.product.lotNumber}`))];
@@ -58,7 +58,7 @@ const Stock = () => {
   const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo"
 
 
-  console.log(data,'data')
+  // console.log(data,'data')
 
 
 
@@ -79,7 +79,7 @@ const Stock = () => {
   ];
   
   const departmentName = location.state?.departmentName;
-  console.log(departmentName,"DepartMane")
+  // console.log(departmentName,"DepartMane")
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -149,7 +149,7 @@ const Stock = () => {
             itemCode: item.product?.itemCode?.replace(item.product?.supplierName || '', '****') || 'ProductDeleted'
           }));
         });
-        console.log(newData,' Displaying the transformed data in console'); // Displaying the transformed data in console
+        // console.log(newData,' Displaying the transformed data in console'); // Displaying the transformed data in console
         setData(newData);
         sortData(newData); // Sorting newData by itemCode after setting the state
       } catch (error) {
@@ -161,32 +161,27 @@ const Stock = () => {
   }, [url, accessToken]);
   
   
-  // useEffect(() => {
-  //   const updatedRowSettings = data.map(item => {
-  //     const existingSetting = rowSettings.find(setting => setting.id === item._id);
-
-  //     return existingSetting || { id: item._id, start: item.start, end: item.end, startColor: item.startColor, endColor: item.endColor };
-  //   });
-  //   setRowSettings(updatedRowSettings);
-  //   console.log(updatedRowSettings,'updatedRowSettings')
-  // }, [data]); // Only run this effect when `data` changes
-  
-  
-  const sortData = (dataToSort) => {
-    let sortedData = [...dataToSort]; // Creating a copy of the original array
-    sortedData = sortedData.sort((a, b) => {
-      const codeA = parseInt((a.itemCode.match(/\d+/) || [0])[0], 10);
-      const codeB = parseInt((b.itemCode.match(/\d+/) || [0])[0], 10);
-      return codeA - codeB;
+  useEffect(() => {
+    const updatedRowSettings = data.map(item => {
+      const existingSetting = rowSettings.find(setting => setting.id === item._id);
+      return existingSetting || { id: item._id, start: item.start, end: item.end, startColor: item.startColor, endColor: item.endColor };
     });
-    setData(sortedData); // Updating the state with the sorted array
+    setRowSettings(updatedRowSettings);
+  }, [data]); // Only run this effect when `data` changes
+  
+  
+  const sortData = (data) => {
+    const sortedData = data.sort((a, b) => {
+      const codeA = a.itemCode.split(' ')[0].toUpperCase(); // Case-insensitive comparison
+    
+      const codeB = b.itemCode.split(' ')[0].toUpperCase();
+      // console.log(codeA,"codeA",codeB,"codeB")
+
+      return codeA.localeCompare(codeB);
+    });
+    setData(sortedData);
   };
   
- 
-  
-  
-  
-
   const handleRowSelectionChange = (event, row) => {
     const isChecked = event.target.checked;
     setSelectedRows(prev => {
@@ -211,7 +206,7 @@ const Stock = () => {
 
   }))
     
-    console.log(exportData,"exportDAta")
+    // console.log(exportData,"exportDAta")
     const worksheet = XLSX.utils.json_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
@@ -230,7 +225,7 @@ const Stock = () => {
 
 
 
-  console.log(currentData,'currentData')
+  // console.log(currentData,'currentData')
 
   
 
@@ -449,7 +444,7 @@ const handleUpdateSettings = async (id, start, end, startColor, endColor) => {
                   <td>{item.product?.sku}</td>
                   <td>{item.product?.productName}</td>
                   <td>{item.totalQuantity}</td>
-         
+                
                   <td> {item.product.physicalLocation}</td>
                   <td>{moment.parseZone(item.expiry).format("DD/MM/YYYY")}</td>
                   <td>{item.product?.lotNumber}</td>

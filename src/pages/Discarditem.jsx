@@ -116,7 +116,7 @@ const Discarditem = () => {
       productName: selectedProduct.productName,
       productId: selectedProduct._id,
       product: selectedProduct,
-      location:selectedLocation?.locationName,
+      location:selectedLocation,
       memberName: selectedMember.memberName,
       department: selectedDepartment,
       quantity: data.quantity,
@@ -507,36 +507,28 @@ const Discarditem = () => {
               </div>
               <div className="col-auto">
               <Autocomplete
-                  disablePortal
-                  id="location-autocomplete"
-                  getOptionLabel={(location) => location ? location.locationName : ""}
-                  options={allLocation}
-                  sx={{ width: 200 }}
-                  value={selectedLocation}
-                  // Disable if the first item in expiryArray has no location
-                  disabled={!selectedStock?.expiryArray?.[0]?.location}
-                  renderInput={(params) => (
-                    <TextField {...params} 
-                      label="Select Location" 
-                      required={!!selectedStock?.expiryArray?.[0]?.location} 
-                    />
-                  )}
-                  onChange={(event, newValue) => {
-                    setSelectedLocation(newValue);
-                    setSelectedExpiry(null); // Reset expiry when location changes
-                  }}
-                />
-                {selectedStock && (
-                  selectedStock?.expiryArray[0]?.location ? (
-                    <Alert severity="success" className="my-2" sx={{ height: "40px" }}>
-                      Location Field Exists.
-                    </Alert>
-                  ) : (
-                    <Alert severity="info" className="my-2" sx={{ height: "40px" }}>
-                      Location Field Does Not Exist.
-                    </Alert>
-                  )
-                )}
+                    disablePortal
+                    id="location-autocomplete"
+                    sx={{ width: 200 }}
+                    value={selectedLocation}
+                 getOptionLabel={(option) => (option ? option : "")}
+        options={
+          [selectedStock?.product?.physicalLocation]
+        }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Location"
+                        required
+                      />
+                    )}
+                                                                  
+                    onChange={(event, newValue) => {
+                      setSelectedLocation(newValue); 
+                      console.log("Selected Location:", newValue);  
+                    }}
+          />
+             
 
               </div>
               <div className="col-auto">
@@ -546,17 +538,11 @@ const Discarditem = () => {
                   id="combo-box-demo"
                   value={selectedExpiry}
               
-              options={
-                selectedStock
-                  ? selectedStock.expiryArray.filter((opt) => 
-                      opt.quantity > 0 &&
-                      (
-                        // Show the entry if location is missing in the database OR if location matches the selected one
-                        !selectedLocation || !opt.location || (opt.location?.trim() === selectedLocation.locationName.trim())
-                      )
-                    )
-                  : []
-              }
+                  options={
+                    selectedStock
+                    ? selectedStock.expiryArray.filter((opt) => opt.quantity > 0)
+                    : []
+                }
               
                   getOptionLabel={(opt) => {
                     // Assuming opt is an object with 'expiry' property
@@ -634,7 +620,7 @@ const Discarditem = () => {
                     <TableCell>{item.docNo}</TableCell>
                     <TableCell>{item.department}</TableCell>
                     <TableCell>{item.memberName}</TableCell>
-                    <TableCell>{item.itemCode}</TableCell>
+                    <TableCell>{item.product.itemCode.split(" ")[0]}</TableCell>
                     <TableCell>{item.productName}</TableCell>
                     <TableCell>{item.quantity}</TableCell>
                     <TableCell>{item?.location || ""}</TableCell>
