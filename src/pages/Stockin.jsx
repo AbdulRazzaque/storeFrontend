@@ -52,7 +52,7 @@ const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbW
       {name:"PARASITOLOGY"},
       {name:"GENERAL"},
     ]
-
+console.log(selectLocation,'location is here')
     const handelDepatment = (value) => {
       setSelectedDepartment(value);
       setSelectedProduct(null);  // Clear the selected product when department changes
@@ -94,7 +94,7 @@ const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbW
         itemCode:selectedProduct.itemCode,
         productId:selectedProduct._id,
         expiry:selectedExpiry,
-        location:selectLocation.physicalLocation,
+        location:selectLocation,
     docNo,
     ...data
   }
@@ -130,9 +130,9 @@ try {
  }
  );
 
-} catch (error) {
-   alert(error)
-   
+} catch(error) {
+  
+   console.log("this is error in stockin",error)
 }
 
 ;
@@ -352,13 +352,18 @@ console.log(allProducts,'allprodts')
           )}
           sx={{ width: 400 }}
           value={selectedProduct}
+     
           renderInput={(params) => (
             <TextField {...params} label="Select item code, Product name" required />
           )}
           // onChange={handleProductChange}
           onChange={(event, newValue) => {
-            setSelectedProduct(newValue); 
-            setSelectLocation(null); 
+            setSelectedProduct(newValue);
+            if (newValue && newValue.physicalLocation) {
+              setSelectLocation(newValue.physicalLocation); // Automatically update location
+            } else {
+              setSelectLocation(""); // Clear location if no product
+            }
     
           }}
         />
@@ -370,20 +375,23 @@ console.log(allProducts,'allprodts')
                       </div>
                       <div className="col-auto">
         <Autocomplete
+          
           disablePortal
           id="location-autocomplete"
-          // getOptionLabel={(location) => location || ""}
-          getOptionLabel={(product) => product?.physicalLocation || ""}
-          // options={filteredLocations} // Show all matching locations
-          // options={allProducts}
-          value={selectLocation}
-          options={selectedProduct ? [selectedProduct] : []} // Show location only from the selected product
+          getOptionLabel={(option) => option || ""}
+    value={selectLocation} // Automatically select the location based on the product
+    options={selectLocation ? [selectLocation] : []} // Only show the automatically selected location
+          // value={selectLocation}
+          // getOptionLabel={(product) => product?.physicalLocation || ""}
+    
+          // options={selectedProduct ? [selectedProduct] : []} // Show location only from the selected product
+          
           sx={{ width: 200 }}
           renderInput={(params) => (
             <TextField {...params} label="Select Location" required />
           )}
           onChange={(event, newValue) => {
-            setSelectLocation(newValue); 
+            setSelectLocation(newValue?.physicalLocation || ""); // Update location based on the selection
     
           }}
         />

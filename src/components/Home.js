@@ -50,14 +50,16 @@ function Home() {
        
         <h1 className="my-5 title text-center">Dashboard</h1>
         
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, }} >
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3, }}  >
+          
         {departments.map((dept, idx) => (
           <Card  sx={{ borderRadius: 4, padding: 2, boxShadow: 3 ,width:300, mx:3, my:3,cursor:"pointer"}}
           onClick={() => history.push(dept.path,{departmentName: dept.name })}
          key={idx}
           >
         
-      <CardContent>
+      <CardContent className ={url === "http://192.168.1.98:3002"?"bg-dark":"bg-white"}>
+
         <Box display="flex" alignItems="center" mb={2}>
           {dept.icon}
         </Box>

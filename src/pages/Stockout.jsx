@@ -59,7 +59,7 @@ const Stockout = () => {
   const [allLocation,setAllLocation] = React.useState([])
   const [selectedLocation, setSelectedLocation] = React.useState(null)
   // ========================================================================================================================================================
-  console.log(allProducts,"allProducts")
+
   const history = useHistory();
   const {
     register,
@@ -69,9 +69,8 @@ const Stockout = () => {
   } = useForm();
   const accessToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo";
-  // console.log(selectedStock?.expiryArray[0].location,"selectedStock")
-  console.log(selectedStock,"selectedStock")
-console.log(selectedLocation,"locationName")
+
+
   // =========================================================Dempartment===============================================================================================
   const department = [
     { name: "TCGC" },
@@ -104,7 +103,7 @@ const handleLogin = () => {
         headers: { token: accessToken },
       })
       .then((res) => {
-        console.log(res);
+     
 
         if (res.data.result.length > 0) {
           setValue("docNo", res.data.result[0].docNo + 1);
@@ -116,14 +115,14 @@ const handleLogin = () => {
         headers: { token: accessToken },
       })
       .then((res) => {
-        console.log(res);
+ 
         setAllMember(res.data.result);
       });
       setIsModalOpen(true);
   }, [flag]);
   // ================================================================post api =====================================================
 
-  console.log(stockOutData, "stockOutData");
+
   const onSubmit = (data) => {
     let obj = {
       productName: selectedProduct.productName,
@@ -138,7 +137,7 @@ const handleLogin = () => {
       expiryObject: selectedExpiry ? selectedExpiry : null,
       docNo: parseInt(data.docNo),
     };
-    console.log(obj,"obj");
+
     setSelectedProduct(null);
     setSelectedStock(null);
     setSelectedLocation(null)
@@ -166,7 +165,7 @@ const handleLogin = () => {
       return; // Exit the function and prevent adding to stockOutData
     }
 
-    // console.log(first)
+
     axios
       .post(
         `${process.env.REACT_APP_DEVELOPMENT}/api/stock/stockOuts`,
@@ -174,13 +173,13 @@ const handleLogin = () => {
         { headers: { token: accessToken } }
       )
       .then((res) => {
-        // console.log(res);
+     
         setStockOutData([
           ...stockOutData,
           { ...obj, _id: res.data.result._id },
         ]);
         //    window.location.reload(false);
-        console.log(stockOutData, "stockOutData");
+    
 
         getAllStocks(selectedDepartment);
       })
@@ -188,7 +187,7 @@ const handleLogin = () => {
       .catch((err) => {
         if (err.response) {
           // setError(err.response.data)
-          console.log("Stock out erorr");
+          console.log("Stock out erorr" ,err);
         }
       });
   };
@@ -206,11 +205,11 @@ const handleLogin = () => {
     setDeleteRow(rowdata);
     setAlert(true);
 
-    console.log(rowdata, "Delete");
+
   };
 
   const handelDeleterow = async (deleteRow) => {
-    console.log(deleteRow.expiry,'row chaeck')
+
     const locationValue = deleteRow.location ? deleteRow.location : "";
     axios
       .post(
@@ -226,12 +225,10 @@ const handleLogin = () => {
       )
 
       .then((res) => {
-        console.log(res);
-        console.log("deterow", deleteRow);
-        console.log(stockOutData, "stockOutData");
+ 
 
         let arr = stockOutData.filter((i) => deleteRow._id !== i._id);
-        console.log("arr", arr);
+        
         setStockOutData(arr);
         setAllStocks(arr);
         setAlert(false);
@@ -266,7 +263,7 @@ const handleLogin = () => {
           return { ...item, id: index + 1 };
         });
         setAllProducts(arr);
-        console.log(arr);
+ 
       });
   };
 
@@ -279,10 +276,10 @@ const handleLogin = () => {
         }
       )
       .then((res) => {
-        console.log(res);
+       
         setAllStocks(res.data.result);
         {
-          console.log(allStocks, "allStocks");
+      
         }
       });
   };
@@ -298,10 +295,10 @@ const handleLogin = () => {
   // ===========================================Auto complete handel product==========================================================================================
   const handleProducts = (val) => {
     setSelectedProduct(val);
-    setSelectedLocation(null)
     const selectedStock = allStocks?.find(
       (stock) => stock?.product?._id === val?._id
     );
+    setSelectedLocation(selectedStock?.product?.physicalLocation)
 
     
     getAllLocations()
@@ -319,18 +316,18 @@ const handleLogin = () => {
 
     setSelectedProduct(null);
     setSelectedExpiry(null);
-    console.log(value, "Here i am cheack");
+
 
     // getAllProducts(value)
     getAllStocks();
-    console.log(value, "Here i am cheack");
+  
 
     getAllProducts();
 
 
   };
 
-  console.log(allLocation,"alllocaion")
+
   // ==========================================================send print button data==========================================================================================
 
   const handelPrintData = () => {
@@ -349,14 +346,13 @@ const handleLogin = () => {
       history.push("/Stockoutpdf", { data: stockOutData });
     }
   };
-      useEffect(() => {
-        // Reset selectedLocation if selectedStock has no location
-        if (!selectedStock?.expiryArray?.[0]?.location) {
-          setSelectedLocation(null); // Clear the location if stock has no location field
-        }
-      }, [selectedStock]);
-console.log(selectedLocation,"selectedLocation")
-      console.log(allStocks, "allStocks");
+      // useEffect(() => {
+      //   // Reset selectedLocation if selectedStock has no location
+      //   if (!selectedStock?.expiryArray?.[0]?.location) {
+      //     setSelectedLocation(null); // Clear the location if stock has no location field
+      //   }
+      // }, [selectedStock]);
+
   return (
     <div className="row">
       <div className="col-xs-12 col-sm-12 col-md-2 col-lg-2 col-xl-2">
@@ -483,7 +479,7 @@ console.log(selectedLocation,"selectedLocation")
                     inputFormat="dd/MM/yyyy"
                     value={selectedDate}
                     onChange={(newValue) => {
-                      // console.log(newValue);
+
                       setSelectedDate(newValue);
                     }}
                     renderInput={(params) => (
@@ -540,7 +536,7 @@ console.log(selectedLocation,"selectedLocation")
                                                                   
                     onChange={(event, newValue) => {
                       setSelectedLocation(newValue); 
-                      console.log("Selected Location:", newValue);  
+            
                     }}
           />
 
