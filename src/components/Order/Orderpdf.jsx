@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import "../../pages/pdf.scss";
-import header from "../../image/orderheader.png";
+
 import "./orderpdf.css";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import moment from "moment";
@@ -20,7 +20,7 @@ const Orderpdf = () => {
 
 
   React.useEffect(() => {
-    const timeoutId = setTimeout(() => {
+     setTimeout(() => {
       setCurrentDateTime(moment());
       window.print();
 

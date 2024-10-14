@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle,TextField } from '@mui/material';
 
-const UpdateLocation = ({update,showDialog,setShowDialog,changeRoweData,updateRow,department}) => {
+const UpdateLocation = ({update,showDialog,setShowDialog,changeRoweData,updateRow}) => {
   return (
     <div>
               <div>

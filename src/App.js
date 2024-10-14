@@ -23,7 +23,7 @@ import Departmetnlils from './components/Department list/Departmetnlils';
 import Orderdetailspdf from './components/Order/Orderdetailspdf';
 import ProtectedRoute from './pages/ProtectedRoute ';
 import Discardpdf from './pages/Discardpdf';
-import Location from './components/location/AddLocation';
+
 import AddLocation from './components/location/AddLocation';
 import Stock from './components/stocks/Stock';
 

@@ -6,13 +6,13 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ProtectedRoute from '../../pages/ProtectedRoute ';
+
 
 const Login = () => {
   const [showLoginForm, setShowLoginForm] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const history = useHistory();
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
     try {

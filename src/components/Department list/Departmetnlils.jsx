@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const Departmetnlils = ({ departments ,onDepartmentSelect  }) => {
   // console.log(departments,'depamrtnt')
     //  =====================================logic==========================================================================
-    const [display,setDisplay]=React.useState(false)
+  
     const [value, setValue] = React.useState();
     const handleChange = (event, newValue) => {
         setValue(newValue);

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 // import "./Home.scss";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Dashhead from "../components/Dashhead";
 import Darkmode from "../components/Darkmode";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {  MenuItem, Select } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import moment from 'moment'
@@ -13,14 +13,11 @@ import { sendData } from "../components/app/socket/socketActions";
 import { useDispatch } from "react-redux";
 const Orderdetails = () => {
   const [display, setDisplay] = React.useState(false);
-  const [department, setDepartment] = React.useState("");
+ 
   const [data, setData] = React.useState([]);
 
     const history = useHistory()
     const dispatch = useDispatch()
-  const handleChange = (event) => {
-    setDepartment(event.target.value);
-  };
 
   console.log(data,'data')
 

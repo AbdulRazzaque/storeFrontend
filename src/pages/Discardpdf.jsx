@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './pdf.scss';
 
-import header from '../image/Discardlogo.png';
-import foot from '../image/foot.png';
 import moment from 'moment';
 import logo from '../image/logo.png'
 import { InputLabel, TextField } from '@mui/material';

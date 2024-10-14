@@ -16,20 +16,15 @@ import { useForm } from 'react-hook-form';
 const Order = () => {
     const [display, setDisplay] = React.useState(false);
     const data = useSelector(state => state.socket.messages)
-    // const chackdata = useSelector(state => state)
-    // console.log(data,'Chack lab name')
     const [allMember,setAllMember] = React.useState([])
-    const [quantities, setQuantities] = useState({});
     const [orderData,setOrderData] = useState('')
-    const [refNo,setRefNo]= useState(2)
     const [member,setMember]=useState([])
-    const [itemArray,seItemArray]=useState([])
     const [orderType,setOrderType]=useState([])
     //======================================================= ========================================================================
     const dispatch = useDispatch()
     
     const history = useHistory()
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { handleSubmit } = useForm();
     const [itemcode,setItemcode]=useState('')
     const [itemnumber,setitemnumber]=useState(1)
 
@@ -55,7 +50,7 @@ console.log(array);
   const productIds = data.flat().map(item => item._id);
   const productNames = data.flat().map(item => item.productName);
   const sku =  data.flat().map(item => item.sku)
-  const department =  data.flat().map(item => item.department)
+
   console.log(sku,'sku')
 
   const objArray = {

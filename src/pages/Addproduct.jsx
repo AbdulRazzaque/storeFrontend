@@ -119,7 +119,7 @@ const onSubmit = async(data,event) => {
   }
      
   try {
-      const res= await axios.post(`${process.env.REACT_APP_DEVELOPMENT}/api/product/createProduct`, obj,
+      await axios.post(`${process.env.REACT_APP_DEVELOPMENT}/api/product/createProduct`, obj,
       {headers:{token:`${accessToken}`}})
       .then(response=>{
       console.log(response, 'res')

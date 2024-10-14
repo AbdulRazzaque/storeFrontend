@@ -3,9 +3,9 @@ import "./Dashhead.scss";
 import { withRouter, useHistory } from "react-router";
 import { connect } from "react-redux";
 import { Button, Tooltip } from "@mui/material";
-import { Dashboard, NoteAdd, PersonAdd, Add, Inventory, Logout, AutoDelete } from "@mui/icons-material";
-import { Link } from "react-router-dom/cjs/react-router-dom";
-import AddLocationIcon from '@mui/icons-material/AddLocation';
+import { Dashboard, NoteAdd, PersonAdd, Add, Logout, AutoDelete } from "@mui/icons-material";
+
+
 import logo from "../image/logo.png";
 import stockOut from "../image/stockOut.png";
 import stockoutsearch from "../image/stockoutsearch.png";

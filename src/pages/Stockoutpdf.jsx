@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './pdf.scss';
 
-import header from '../image/header.png';
 import logo from '../image/logo.png';
-import foot from '../image/foot.png';
+
 import moment from 'moment';
 
 const Stockoutpdf = (props) => {

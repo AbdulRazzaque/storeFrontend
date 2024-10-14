@@ -29,12 +29,12 @@ function Home() {
     };
 
     const departments = [
-      { name: "TCGC", icon:<img src={genetic } className="icon-image"/>, totalQuantity: data.find(item => item._id === "TCGC")?.totalQuantity || 0, path: "/Stock" },
-      { name: "MICROBIOLOGY",icon:<img src={microbiology } className="icon-image"/>,totalQuantity:data.find(item => item._id === "MICROBIOLOGY")?.totalQuantity || 0,  path: "/Stock"},
-      { name: "PARASITOLOGY",icon:<img src={parasite } className="icon-image"/>, totalQuantity: data.find(item => item._id === "PARASITOLOGY")?.totalQuantity || 0, path: "/Stock" },
-      { name: "GENERAL",icon:<img src={medicine } className="icon-image"/>, totalQuantity: data.find(item => item._id === "GENERAL")?.totalQuantity || 0, path: "/Stock"},
-      { name: "CENTRAL", icon:<img src={nomad} className="icon-image"/>, path: "/Centralsection", },
-      { name: "ALL ORDER",icon:<img src={order} className="icon-image"/>, path: "/Orderdetails",  },
+      { name: "TCGC", icon:<img src={genetic } alt="genetic" className="icon-image"/>, totalQuantity: data.find(item => item._id === "TCGC")?.totalQuantity || 0, path: "/Stock" },
+      { name: "MICROBIOLOGY",icon:<img src={microbiology } alt="microbiology" className="icon-image"/>,totalQuantity:data.find(item => item._id === "MICROBIOLOGY")?.totalQuantity || 0,  path: "/Stock"},
+      { name: "PARASITOLOGY",icon:<img src={parasite } alt="parasite"  className="icon-image"/>, totalQuantity: data.find(item => item._id === "PARASITOLOGY")?.totalQuantity || 0, path: "/Stock" },
+      { name: "GENERAL",icon:<img src={medicine } alt="medicine" className="icon-image"/>, totalQuantity: data.find(item => item._id === "GENERAL")?.totalQuantity || 0, path: "/Stock"},
+      { name: "CENTRAL", icon:<img src={nomad} alt="nomad" className="icon-image"/>, path: "/Centralsection", },
+      { name: "ALL ORDER",icon:<img src={order} alt="order"   className="icon-image"/>, path: "/Orderdetails",  },
     ];
 
 

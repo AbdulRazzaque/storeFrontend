@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './stock.css';
 import axios from 'axios';
 import moment from 'moment';
-import { Button, IconButton, TextField, Tooltip } from '@mui/material';
+import { Button,  TextField, Tooltip } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import { useDispatch } from 'react-redux';
@@ -79,48 +79,6 @@ const Stock = () => {
   ];
   
   const departmentName = location.state?.departmentName;
-  // console.log(departmentName,"DepartMane")
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(`${url}/api/stock/getAllStocksByDepartment/${departmentName}`, {
-  //         headers: { token: accessToken }
-  //       });
-  
-  //       const newData = response.data.result.map((item, index) => {
-  //         // Check if expiryArray exists and is an array before using it
-  //         const totalQuantity = Array.isArray(item.expiryArray) 
-  //           ? item.expiryArray.reduce((acc, curr) => acc + curr.quantity, 0)
-  //           : 0;
-  //         const expiryDates = Array.isArray(item.expiryArray) 
-  //           ? item.expiryArray.map(e => e.expiry).join(', ')
-  //           : 'No expiry info';
-  
-  //         // Replace supplierName with **** in itemCode
-  //         let cleanItemCode = item.product && item.product.itemCode ? item.product.itemCode : 'ProductDeleted';
-  //         if (item.product && item.product.supplierName) {
-  //           cleanItemCode = cleanItemCode.replace(item.product.supplierName, '****');
-  //         }
-  
-  //         return {
-  //           ...item,
-  //           id: index + 1,
-  //           totalQuantity,
-  //           expiry: expiryDates,
-  //           itemCode: cleanItemCode
-  //         };
-  //       });
-  
-  //       setData(newData);
-  //       sortData(newData); // Sorting newData by itemCode after setting the state
-  //     } catch (error) {
-  //       console.error('Error fetching Genetic stock data:', error);
-  //     }
-  //   };
-  
-  //   fetchData();
-  // }, [url, accessToken]);
-  
   useEffect(() => {
     const fetchData = async () => {
       try {

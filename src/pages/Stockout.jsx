@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../components/Home.scss";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Dashhead from "../components/Dashhead";
 import Darkmode from "../components/Darkmode";
 import {
-  Alert,
+
   Autocomplete,
   Button,
   Dialog,
@@ -40,9 +40,9 @@ const Stockout = () => {
   const [display, setDisplay] = React.useState(false);
 
   const [selectedDate, setSelectedDate] = React.useState(new Date());
-  const [showDialog, setShowDialog] = useState(false);
+ 
   const [allMember, setAllMember] = React.useState([]);
-  const [update, setUpdate] = useState([]);
+
   const [deleteRow, setDeleteRow] = React.useState([]);
   const [alert, setAlert] = useState(false);
   const [allProducts, setAllProducts] = React.useState([]);
@@ -65,25 +65,13 @@ const Stockout = () => {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+  
   } = useForm();
   const accessToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo";
 
 
-  // =========================================================Dempartment===============================================================================================
-  const department = [
-    { name: "TCGC" },
-    { name: "MICROBIOLOGY" },
-    { name: "HEAMOTOLGY" },
-    { name: "BIOCHEMISTRY" },
-    { name: "HPLC" },
-    { name: "AAS" },
-    { name: "PARASITOLOGY" },
-    { name: "GENERAL" },
-  ];
-
-
+  
 //=======================logim model==============================================================
 
 
@@ -193,13 +181,13 @@ const handleLogin = () => {
   };
   // ================================================================open Dialog api & Update code here =====================================================
 
-  const handleOpenDialog = (rowdata) => {
-    setUpdate(rowdata);
-    setShowDialog(true); // Open the dialog
-  };
-  const updateData = (e) => {
-    setUpdate({ ...update, [e.target.name]: e.target.value });
-  };
+  // const handleOpenDialog = (rowdata) => {
+  //   setUpdate(rowdata);
+  //   setShowDialog(true); // Open the dialog
+  // };
+  // const updateData = (e) => {
+  //   setUpdate({ ...update, [e.target.name]: e.target.value });
+  // };
   // =======================================================================Delete Dialog and api code here ======================================================================
   const handleDeleteDialog = (rowdata) => {
     setDeleteRow(rowdata);
