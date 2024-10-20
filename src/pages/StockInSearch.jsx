@@ -105,16 +105,17 @@ const handleSubmit = ()=>{
 // =============================================xl data export================================================================================
 
 const handleExport = () => {
-  const filteredData = data.map(({ name, department, quantity, createdAt, expiry, memberName }) => ({
-    name,
-    department,
-    quantity,
-    createdAt,
-    expiry,
-  
-  }));
 
-  const worksheet = XLSX.utils.json_to_sheet(filteredData);
+const filterData = data.map((item)=>({
+  Name:item.name,
+  Location:item.location,
+  Quantity:item.quantity,
+  Date:moment.parseZone(item.createdAt).format("DD/MM/YYYY"),
+  Expiry:moment.parseZone(item.expiry).format("DD/MM/YYYY")
+
+}))
+
+  const worksheet = XLSX.utils.json_to_sheet(filterData);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
   const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
