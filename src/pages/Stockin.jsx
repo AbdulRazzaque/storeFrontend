@@ -117,15 +117,16 @@ try {
   //  setFlag(!flag)
   //    event.target.reset();
  }).catch(error => {
-   toast(error.response.data,{
-     position: "top-right",
-     autoClose: 5000,
-     hideProgressBar: false,
-     closeOnClick: true,
-     pauseOnHover: true,
-     draggable: true,
-     progress: undefined,
-     theme: "dark"
+   toast.error(error.response.data.msg,{
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    // transition: Bounce,
    })
  }
  );
@@ -159,12 +160,7 @@ const getAllProducts = ()=>{
   axios.get(`${process.env.REACT_APP_DEVELOPMENT}/api/product/getAllProducts`,{headers:{token:`${accessToken}`}})
   .then(res=>{
     let arr = res.data.result.map((item,index)=>{
-      // const fieldsToCheck = ['productName','lotNumber', 'manufacturer', 'physicalLocation', 'sku', 'supplierName', 'unit','addModel'];
-      // fieldsToCheck.forEach(field=>{
-      //   if(item.itemCode.includes(item[field])){
-      //     item.itemCode = item.itemCode.replace(item[field],'')
-      //   }
-      // })
+   
       return {...item, id:index +1}
     })
     setAllProducts(arr)
