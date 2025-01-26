@@ -3,11 +3,12 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Dashhead from "../components/Dashhead";
 import Darkmode from "../components/Darkmode";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { DataGrid } from '@mui/x-data-grid';
+import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useForm } from 'react-hook-form' 
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import Paper from '@mui/material/Paper';
 import axios from 'axios'
 import Updateproduct from "../components/update/Updateproduct";
 import { ToastContainer, toast } from 'react-toastify';
@@ -16,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { sendData } from "../components/app/socket/socketActions";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import Departmetnlils from "../components/Department list/Departmetnlils";
+import MaterialTable from 'material-table';
 const Addproduct = () => {
   const [display, setDisplay] = React.useState(false);
   const [data,setData]=useState([])
@@ -26,49 +28,99 @@ const Addproduct = () => {
   const [selectedRows,setSelectedRows]= useState([])
   const [department, setDepartment] = React.useState('');
   const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [filterData  ,setFilterData] = useState(null)
+  const [loading, setLoading] = React.useState(false);
   // ==============================================================================================
   const { register, handleSubmit, formState: { errors } } = useForm();
   const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiX2lkIjoiNjVlODZiNzZmOTk0ZmQzZTdmNDliMjJiIiwiaWF0IjoxNzA5NzkzMDcwfQ.siBn36zIBe_WmmIfuHMXI6oq4KMJ4dYaWQ6rDyBBtEo"
   const dispatch = useDispatch();
   const history = useHistory();
 // ===============================================================================================================
-  const columns = [
-    { field: 'id', headerName: 'S.N', width: 70 },
-    { field: 'itemCode', headerName: 'item Code', width: 100, valueGetter:(params)=>params.row.itemCode.split(" ")[0]},
-    { field: 'productName', headerName: 'Item description', width: 180 },
-    { field: 'physicalLocation', headerName: 'Physical location', width: 130 },
-    { field: 'sku', headerName: 'S.K.U', width: 130 },
-    { field: 'lotNumber', headerName: 'Lot number', width: 130 },
-    { field: 'manufacturer', headerName: 'Manufacturer', width: 130 },
-    { field: 'supplierName', headerName: 'Supplier name', width: 130 },
-    { field: 'unit', headerName: 'Unit', width: 100 },
-    { field: 'addModel', headerName: 'Model', width: 130 },
-    { field: 'department', headerName: 'Department', width: 130 },
-    {
-      title: "Action",
-      field: "Action",
-      width: 100,
-      renderCell: (params) => (
-        <Fragment>
-          <Button   onClick={() => updateRowData(params.row)}>
-            <EditIcon />
-          </Button>
-        </Fragment>
-      ),
-    },
-    {
-      title: "Delete",
-      field: "Delete",
-      width: 100,
-      renderCell: () => (
-        <Fragment>
-          <Button color="error"  onClick={() => setAlert(true)}>
-            <DeleteIcon />
-          </Button>
-        </Fragment>
-      ),
-    },
+  // const columns = [
+  //   { field: 'id', headerName: 'S.N', width: 70 },
+  //   { field: 'itemCode', headerName: 'item Code', width: 100, valueGetter:(params)=>params.row.itemCode.split(" ")[0]},
+  //   { field: 'productName', headerName: 'Item description', width: 180,filterable: true },
+  //   { field: 'physicalLocation', headerName: 'Physical location', width: 130,filterable: true },
+  //   { field: 'sku', headerName: 'S.K.U', width: 130 },
+  //   { field: 'lotNumber', headerName: 'Lot number', width: 130 },
+  //   { field: 'manufacturer', headerName: 'Manufacturer', width: 130 },
+  //   { field: 'supplierName', headerName: 'Supplier name', width: 130 },
+  //   { field: 'unit', headerName: 'Unit', width: 100 },
+  //   { field: 'addModel', headerName: 'Model', width: 130 },
+  //   { field: 'department', headerName: 'Department', width: 130 },
+  //   {
+  //     title: "Action",
+  //     field: "Action",
+  //     width: 100,
+  //     renderCell: (params) => (
+  //       <Fragment>
+  //         <Button   onClick={() => updateRowData(params.row)}>
+  //           <EditIcon />
+  //         </Button>
+  //       </Fragment>
+  //     ),
+  //   },
+  //   {
+  //     title: "Delete",
+  //     field: "Delete",
+  //     width: 100,
+  //     renderCell: () => (
+  //       <Fragment>
+  //         <Button color="error"  onClick={() => setAlert(true)}>
+  //           <DeleteIcon />
+  //         </Button>
+  //       </Fragment>
+  //     ),
+  //   },
   
+  // ];
+  const columns = [
+    { title: 'S.N', field: 'id', width: 70 },
+    { 
+      title: 'Item Code', 
+      field: 'itemCode', 
+      width: 100, 
+      render: rowData => rowData.itemCode.split(" ")[0] 
+    },
+    { 
+      title: 'Item Description', 
+      field: 'productName', 
+      width: 180, 
+      filtering: true 
+    },
+    { 
+      title: 'Physical Location', 
+      field: 'physicalLocation', 
+      width: 130, 
+      filtering: true 
+    },
+    { title: 'S.K.U', field: 'sku', width: 130 },
+    { title: 'Lot Number', field: 'lotNumber', width: 130 },
+    { title: 'Manufacturer', field: 'manufacturer', width: 130 },
+    { title: 'Supplier Name', field: 'supplierName', width: 130 },
+    { title: 'Unit', field: 'unit', width: 100 },
+    { title: 'Model', field: 'addModel', width: 130 },
+    { title: 'Department', field: 'department', width: 130 },
+    {
+      title: 'Action',
+      field: 'action',
+      width: 100,
+      render: rowData => (
+        <Button onClick={() => updateRowData(rowData)}>
+          <EditIcon />
+        </Button>
+      ),
+    },
+    {
+      title: 'Delete',
+      field: 'delete',
+      width: 100,
+      render: rowData => (
+        <Button color="error" onClick={() => setAlert(true)}>
+          <DeleteIcon />
+        </Button>
+      ),
+    },
   ];
   
 // =========================================Get Api===============================================================================================
@@ -215,7 +267,19 @@ useEffect(()=>{
 
 // console.log(update)
 // ===================================================order code===============================================================================================================
+useEffect(() => {
+  // Retrieve selected rows from localStorage
+  const selectedRowsFromStorage = JSON.parse(localStorage.getItem("selectedRows")) || [];
+  
+  // Update the selectedRows state from localStorage
+  setSelectedRows(selectedRowsFromStorage);
 
+  // Clear localStorage and selectedRows on component unmount
+  return () => {
+    localStorage.removeItem("selectedRows");
+    setSelectedRows([]); // Clear selectedRows from the state as well
+  };
+}, []);
 const labName = 'General'
 const handelClick = ()=>{
   const dataToSend = selectedRows.map(row=>({
@@ -241,8 +305,37 @@ const handelClick = ()=>{
   }
 
 }
+// const labName = 'General'
+// const handelClick = () => {
+//   // Retrieve selected rows from localStorage (if any)
+//   const selectedRowsFromStorage = JSON.parse(localStorage.getItem("selectedRows")) || [];
 
+//   // Merge selected rows from state with localStorage data
+//   const mergedRows = [...selectedRows, ...selectedRowsFromStorage];
 
+//   // Prepare the data to send
+//   const dataToSend = mergedRows.map(row => ({
+//     ...row,
+//     labName: labName,
+//   }));
+
+//   if (dataToSend.length === 0) {
+//     toast("Select Item first", {
+//       position: "top-center",
+//       autoClose: 5000,
+//       hideProgressBar: false,
+//       closeOnClick: true,
+//       pauseOnHover: true,
+//       draggable: true,
+//       progress: undefined,
+//       theme: "light",
+//     });
+//   } else {
+//     dispatch(sendData(dataToSend));
+//     history.push('/Order');
+//     // console.log(dataToSend)
+//   }
+// };
 
 // ===================================================JSx code===============================================================================================================
 
@@ -448,35 +541,64 @@ const handelClick = ()=>{
           data={data}/>
  {/* =======================================Department list=================================== */}
         </div>
+     
       </div>
+    
       <div style={{ height: 400, width: '100%' }}>
-        <DataGrid
-          rows={data}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: { psku: 0, pskuSize: 5 },
-            },
-          }}
-          pskuSizeOptions={[5, 10]}
-          onRowClick={(item)=>setUpdate(item.row)}
-          checkboxSelection
-          onSelectionModelChange={(ids)=>{
-            const selectedIDs = new Set(ids);
-            const selectedRows = data.filter((row)=>
-            selectedIDs.has(row.id),
-            )
-            setSelectedRows(selectedRows)
-          }}
-        />
-      </div>
-      <div className="text-center my-5">
-  <Button variant="contained" onClick={handelClick}> Order </Button> 
+     {   console.log(filterData,'filterData')}
+     {/* <DataGrid
+        rows={data}
+        columns={columns}
+        loading={loading}
+        slots={{ toolbar: GridToolbar }}
+        pageSize={5}
+        pageSizeOptions={[5, 10]}
+        filterModel={{
+          items: [
+            { columnField: 'productName', operatorValue: 'contains', value: '' }, // Example filter
+            { columnField: 'physicalLocation', operatorValue: 'contains', value: '' },
+          ],
+        }}
+        checkboxSelection
+        onSelectionModelChange={(ids) => {
+          const selectedIDs = new Set(ids);
+          const selectedRows = data.filter((row) =>
+            selectedIDs.has(row.id)
+          );
+          setSelectedRows(selectedRows);
+        }}
+      /> */}
+      <div >
+  <div className="ml-5 my-2-5">
+  <Button variant="contained" onClick={handelClick}   style={{ fontSize: '1.25rem', padding: '10px 20px' }}> Order </Button> 
     </div>
+      <div style={{ marginBottom: '50px 0' }}>
+  <div elevation={3} style={{ padding: '20px' }}>
+    <MaterialTable
+      title={selectedDepartment||"All department products"}
+      columns={columns}
+      data={data}
+      isLoading={loading}
+      options={{
+        // paging:false,
+        pageSize: 20,
+        pageSizeOptions: [40,,100,500,1000],
+
+        selection: true,
+      }}
+      onSelectionChange={(rows) => {
+        setSelectedRows(rows);
+      }}
+    />
+  </div>
+</div>
+</div>
+      </div>
+    
 
     </form>
 
-        <Darkmode/>
+        {/* <Darkmode/> */}
         </div>
         <Updateproduct
         showDialog={showDialog}

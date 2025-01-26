@@ -23,27 +23,28 @@
     "file-saver": "^2.0.5",
     "google-map-react": "^2.1.10",
     "jsog": "^1.0.7",
+    "material-table": "^2.0.6",
     "moment": "^2.29.1",
-    "node-sass": "^4.14.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.17.5",
     "react-phone-number-input": "^3.1.35",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^4.0.3",
     "react-to-print": "^2.15.1",
-    "react-toastify": "^9.0.3",
+    "react-toastify": "^8.1.0",
     "redux": "^4.1.2",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
+    "saas": "^1.0.0",
     "web-vitals": "^1.0.1",
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -66,6 +67,9 @@
     ]
   },
   "devDependencies": {
-    "react-error-overlay": "^6.0.9"
+    "react-error-overlay": "^6.0.9",
+    "sass": "^1.81.0",
+    "sass-loader": "^10.1.1",
+    "webpack": "^4.44.2"
   }
 }

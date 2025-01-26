@@ -15,7 +15,7 @@ const Orderpdf = () => {
   const sku = useSelector((state) => state.socket.messages?.map((i) => i?.sku))
   const department = useSelector((state) => state.socket.messages[0]?.department)
   const history = useHistory()
-
+console.log(sku)
   const [currentDateTime, setCurrentDateTime] = useState(moment());
 
 
@@ -141,10 +141,13 @@ const Orderpdf = () => {
                 {item?.productName.map((productName, index) => (
                   <tr key={`${id}-${index}`} className="table-bordered">
                     <td className="table-bordered">{index + 1}</td>
-                    <td className="table-bordered">{productName}</td>
-                    {sku?.map((skuItem, skuIndex) => (
-                      <td className="table-bordered" key={`sku-${skuIndex}`}>{skuItem[0]}</td>
-                    ))}
+                    <td className="table-bordered">{productName.productName}</td>
+                    <td className="table-bordered">{productName.sku}</td>
+    
+
+              
+
+
                     <td className="table-bordered">{item.requiredQuantity[index]}</td>
                   </tr>
                 ))}

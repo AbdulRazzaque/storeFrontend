@@ -38,8 +38,8 @@ const handleQuantityChange =(id,value)=>{
   [id]:+value
   }))
 }
-
-
+console.log(data,'data')
+console.log(orderData,"orderData")
  
 const onSubmit = async () => {
   const array = Object.values(orderData);
@@ -48,10 +48,10 @@ console.log(array);
 
   // Assuming `data` is an array of arrays containing product objects
   const productIds = data.flat().map(item => item._id);
-  const productNames = data.flat().map(item => item.productName);
+  const productNames = data.flat().map(item => item);
   const sku =  data.flat().map(item => item.sku)
 
-  console.log(sku,'sku')
+
 
   const objArray = {
     memberId: member._id,
@@ -73,7 +73,8 @@ console.log(array);
     const requestData = {
       objArray,
       sku,
-      department:member.department
+      department:member.department,
+      data:data
     };
     dispatch(sendData(requestData));
      history.push('/Orderpdf')
@@ -243,9 +244,10 @@ console.log(orderType,'orderType')
   </thead>
   <tbody>
   {data.map((itemGroup, groupIndex) => {   
+
     if (Array.isArray(itemGroup)) {
       return itemGroup.map((item, itemIndex) => (
-        <tr key={itemIndex}>
+        <tr  key={itemIndex}>
           <td>{item.id}</td>
           {/* <td>{item.expiry}</td> */}
           {/* <td>{item.itemcode}</td> */}

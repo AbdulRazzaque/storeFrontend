@@ -6,7 +6,7 @@ const Departmetnlils = ({ departments ,onDepartmentSelect  }) => {
   // console.log(departments,'depamrtnt')
     //  =====================================logic==========================================================================
   
-    const [value, setValue] = React.useState();
+    const [value, setValue] = React.useState(0);
     const handleChange = (event, newValue) => {
         setValue(newValue);
         const selectedDepartment = departments[newValue].name;

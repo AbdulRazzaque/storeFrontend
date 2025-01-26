@@ -47,7 +47,7 @@ fetchData()
 // ================================================================Color code===============================================================
 
 
-console.log(rowSettings, 'Current Row Settings');
+// console.log(rowSettings, 'Current Row Settings');
 useEffect(() => {
   const updatedRowSettings = data.flatMap(item => 
     item.productDetails.map(product => {
@@ -329,7 +329,7 @@ const paginatedData = filteredStocks.slice(
                 <td>{product.name}</td>
                 <td>{product.quantity}</td>
                 <td>{product.physicalLocation}</td>
-                <td>{product.expiry ? moment(product.expiry).format("DD/MM/YYYY") : "-"}</td>
+                <td>{product.expiry ? moment(product.expiry).local().format("DD/MM/YYYY") : "-"}</td>
                 <td>{product.LotNumber}</td>
                 <td>{product.Manufacturer}</td>
               </tr>

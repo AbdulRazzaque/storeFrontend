@@ -51,8 +51,9 @@ const department =[
       { field: 'department', headerName:'Department' , width: 150 },
       { field: 'quantity', headerName: 'Quantity' ,width: 150 },
       { field: 'location', headerName: 'Location' ,width: 150 },
-        {field: "createdAt",headerName: "Date", type:'date',width: 150,valueGetter:(rowData)=>moment(rowData.createdAt).format("DD/MM/YYYY")},
-        {field: "expiry",headerName: "Expiry Date", type:'date',width: 150,valueGetter:(rowData)=>moment(rowData.expiry).format("DD/MM/YYYY")},
+        {field: "createdAt",headerName: "Date", type:'date',width: 150,valueGetter:(rowData)=>moment(rowData.row.createdAt).format("DD/MM/YYYY")},
+        {field: "expiry",headerName: "Expiry Date", type:'date',width: 150,valueGetter:(rowData)=>moment(rowData.row.expiry).format("DD/MM/YYYY")},
+        // {field: "expiry",headerName: "Expiry Date", type:'date',width: 150,valueGetter:(rowData)=>moment(rowData.row.expiry).format("DD/MM/YYYY")},
         { field: 'memberName', headerName:'Request by' , width: 150 },
     ]; 
 
@@ -75,7 +76,7 @@ const department =[
         axios.get(`${url}/api/product/getAllProducts`,{headers:{token:accessToken}})
         .then(res=>{
           setAllProducts(res.data.result)
-          console.log(res.data.result)
+          // console.log(res.data.result)
         })
       } catch (error) {
         console.log(error)
@@ -88,7 +89,7 @@ const department =[
 const handleSubmit = ()=>{
   axios.post(`${process.env.REACT_APP_DEVELOPMENT}/api/stock/getPrevStockOutInfo`,{start:selectedDate,end:selectedDate2,department:selectedDepartment,productId:product.map(i=>i._id)},{headers:{token:accessToken}})
   .then(res=>{
-    console.log(res)
+    // console.log(res)
     // setTotal(res.data.result)
     let arr = res.data.result.map((item,index)=>({...item,id:index+1}))
     setData(arr)
